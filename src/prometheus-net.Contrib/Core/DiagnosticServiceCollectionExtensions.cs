@@ -29,6 +29,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 listener => listener.Name.Equals("SqlClientDiagnosticListener"));
             sqlClientListenerHandler.Subscribe();
 
+            var entityFrameworkListenerHandler = new DiagnosticSourceSubscriber(
+                name => new SqlClientListenerHandler(name),
+                listener => listener.Name.Equals("SqlClientDiagnosticListener"));
+            entityFrameworkListenerHandler.Subscribe();
+
             var listener = new RuntimeEventListener(TimeSpan.FromSeconds(10));
             var aspNetCoreListener = new AspNetCoreEventListener(TimeSpan.FromSeconds(10));
             var signalrListener = new SignalREventListener(TimeSpan.FromSeconds(10));
