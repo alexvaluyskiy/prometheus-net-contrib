@@ -1,5 +1,6 @@
 ﻿using Prometheus.Contrib.Core;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace Prometheus.Contrib.Diagnostic
         private readonly PropertyFetcher exceptionFetcher = new PropertyFetcher("Exception");
         private readonly PropertyFetcher statisticsFetcher = new PropertyFetcher("Statistics");
 
-        private Dictionary<string, Dictionary<string, long>> Statistics = new Dictionary<string, Dictionary<string, long>>();
+        private ConcurrentDictionary<string, Dictionary<string, long>> Statistics = new ConcurrentDictionary<string, Dictionary<string, long>>();
         private readonly AsyncLocal<long> commandTimestampContext = new AsyncLocal<long>();
 
         public SqlClientListenerHandler(string sourceName) : base(sourceName)
@@ -87,8 +88,8 @@ namespace Prometheus.Contrib.Diagnostic
                 case "System.Data.SqlClient.WriteCommandAfter":
                 case "Microsoft.Data.SqlClient.WriteCommandAfter":
                     {
-                        var commandTimestamp = commandTimestampContext.Value;
-                        PrometheusCounters.SqlCommandsDuration.Observe(commandTimestamp);
+                        long operationTimeStamp = Stopwatch.GetTimestamp() - commandTimestampContext.Value;
+                        PrometheusCounters.SqlCommandsDuration.Observe(operationTimeStamp);
 
                         if (statisticsFetcher.Fetch(payload) is IDictionary currentStatistics)
                         {
@@ -206,32 +207,41 @@ namespace Prometheus.Contrib.Diagnostic
 
         private void WriteStatisticsMetrics(string connection, IDictionary currentStatistics)
         {
+            var aggregatedStats = GetAggregatedStatistics(connection, currentStatistics);
+
+            PrometheusCounters.SqlBuffersReceived.Set(aggregatedStats["BuffersReceived"]);
+            PrometheusCounters.SqlBuffersSent.Set(aggregatedStats["BuffersSent"]);
+            PrometheusCounters.SqlBytesReceived.Set(aggregatedStats["BytesReceived"]);
+            PrometheusCounters.SqlBytesSent.Set(aggregatedStats["BytesSent"]);
+            PrometheusCounters.SqlConnectionTime.Set(aggregatedStats["ConnectionTime"]);
+            PrometheusCounters.SqlCursorOpens.Set(aggregatedStats["CursorOpens"]);
+            PrometheusCounters.SqlExecutionTime.Set(aggregatedStats["ExecutionTime"]);
+            PrometheusCounters.SqlIduCount.Set(aggregatedStats["IduCount"]);
+            PrometheusCounters.SqlIduRows.Set(aggregatedStats["IduRows"]);
+            PrometheusCounters.SqlNetworkServerTime.Set(aggregatedStats["NetworkServerTime"]);
+            PrometheusCounters.SqlPreparedExecs.Set(aggregatedStats["PreparedExecs"]);
+            PrometheusCounters.SqlPrepares.Set(aggregatedStats["Prepares"]);
+            PrometheusCounters.SqlSelectCount.Set(aggregatedStats["SelectCount"]);
+            PrometheusCounters.SqlSelectRows.Set(aggregatedStats["SelectRows"]);
+            PrometheusCounters.SqlServerRoundtrips.Set(aggregatedStats["ServerRoundtrips"]);
+            PrometheusCounters.SqlSumResultSets.Set(aggregatedStats["SumResultSets"]);
+            PrometheusCounters.SqlTransactions.Set(aggregatedStats["Transactions"]);
+            PrometheusCounters.SqlUnpreparedExecs.Set(aggregatedStats["UnpreparedExecs"]);
+        }
+
+        private Dictionary<string, long> GetAggregatedStatistics(string connectionId, IDictionary currentStatistics)
+        {
             var genericDictionary = new Dictionary<string, long>();
             foreach (var key in currentStatistics.Keys)
             {
                 genericDictionary.Add(key.ToString(), (long)currentStatistics[key]);
             }
 
-            Statistics[connection] = genericDictionary;
+            Statistics[connectionId] = genericDictionary;
 
-            PrometheusCounters.SqlBuffersReceived.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "BuffersReceived").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlBuffersSent.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "BuffersSent").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlBytesReceived.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "BytesReceived").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlBytesSent.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "BytesSent").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlConnectionTime.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "ConnectionTime").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlCursorOpens.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "CursorOpens").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlExecutionTime.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "ExecutionTime").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlIduCount.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "IduCount").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlIduRows.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "IduRows").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlNetworkServerTime.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "NetworkServerTime").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlPreparedExecs.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "PreparedExecs").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlPrepares.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "Prepares").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlSelectCount.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "SelectCount").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlSelectRows.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "SelectRows").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlServerRoundtrips.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "ServerRoundtrips").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlSumResultSets.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "SumResultSets").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlTransactions.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "Transactions").Select(x => x.Value).Sum());
-            PrometheusCounters.SqlUnpreparedExecs.Set(Statistics.SelectMany(x => x.Value).Where(x => x.Key == "UnpreparedExecs").Select(x => x.Value).Sum());
+            return Statistics.SelectMany(x => x.Value)
+                .GroupBy(x => x.Key, v => v.Value, (k, g) => new { Key = k, Val = g.Sum(x => x) })
+                .ToDictionary(x => x.Key, v => v.Val);
         }
     }
 }
