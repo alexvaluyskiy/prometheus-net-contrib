@@ -15,8 +15,8 @@ namespace WebApp
 {
     public class Startup
     {
-        public static ConnectionMultiplexer connection = ConnectionMultiplexer.Connect("");
-        public static SqlConnection sqlConnection = new SqlConnection("");
+        public static ConnectionMultiplexer connection = ConnectionMultiplexer.Connect("10.0.35.120:8637");
+        public static SqlConnection sqlConnection = new SqlConnection("Data Source=10.0.35.80,1433;Initial Catalog=trading-2invest-dev;Persist Security Info=True;User ID=DevTestUser;Password=DevTestUser");
 
         public Startup(IConfiguration configuration)
         {
@@ -44,8 +44,8 @@ namespace WebApp
 
             services.AddPrometheusMonitoring();
 
-            //sqlConnection.StatisticsEnabled = true;
-            //sqlConnection.Open();
+            sqlConnection.StatisticsEnabled = true;
+            sqlConnection.Open();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

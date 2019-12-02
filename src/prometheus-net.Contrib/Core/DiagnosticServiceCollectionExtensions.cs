@@ -1,5 +1,7 @@
 using Prometheus.Contrib.Core;
 using Prometheus.Contrib.Diagnostic;
+using Prometheus.Contrib.EventListeners;
+using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -15,16 +17,21 @@ namespace Microsoft.Extensions.DependencyInjection
             var aspNetCoreListenerHandler = new DiagnosticSourceSubscriber(
                 name => new AspNetCoreListenerHandler(name),
                 listener => listener.Name.Equals("Microsoft.AspNetCore"));
-           // aspNetCoreListenerHandler.Subscribe();
+            //aspNetCoreListenerHandler.Subscribe();
 
             var massTransitListenerHandler = new DiagnosticSourceSubscriber(
                 name => new MassTransitListenerHandler(name),
                 listener => listener.Name.Equals("MassTransit"));
-            massTransitListenerHandler.Subscribe();
+            //massTransitListenerHandler.Subscribe();
 
-            //var listener = new RuntimeEventListener(TimeSpan.FromSeconds(10));
-            //var aspNetCoreListener = new AspNetCoreEventListener(TimeSpan.FromSeconds(10));
-            //var signalrListener = new SignalREventListener(TimeSpan.FromSeconds(10));
+            var sqlClientListenerHandler = new DiagnosticSourceSubscriber(
+                name => new SqlClientListenerHandler(name),
+                listener => listener.Name.Equals("SqlClientDiagnosticListener"));
+            sqlClientListenerHandler.Subscribe();
+
+            var listener = new RuntimeEventListener(TimeSpan.FromSeconds(10));
+            var aspNetCoreListener = new AspNetCoreEventListener(TimeSpan.FromSeconds(10));
+            var signalrListener = new SignalREventListener(TimeSpan.FromSeconds(10));
         }
     }
 }

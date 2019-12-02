@@ -27,7 +27,7 @@ namespace WebApp.Controllers
             });
 
             using (var client = new HttpClient())
-                await client.GetAsync("www.google.com");
+                await client.GetAsync("https://www.google.com");
 
             return Ok();
         }

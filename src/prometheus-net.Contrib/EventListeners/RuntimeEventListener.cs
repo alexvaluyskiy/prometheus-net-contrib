@@ -61,7 +61,7 @@ namespace Prometheus.Contrib.EventListeners
         {
             if (source.Name.Equals(EventSourceName))
             {
-                EnableEvents(source, EventLevel.Verbose, EventKeywords.All, eventArguments);
+                EnableEvents(source, EventLevel.LogAlways, EventKeywords.All, eventArguments);
             }
         }
 
