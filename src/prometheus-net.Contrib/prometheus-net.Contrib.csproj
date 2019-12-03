@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.0.1" />
     <PackageReference Include="MassTransit" Version="6.0.0-develop.2281" />
     <PackageReference Include="prometheus-net" Version="3.3.0" />

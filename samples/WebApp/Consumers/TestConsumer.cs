@@ -1,20 +1,34 @@
 ﻿using MassTransit;
 using StackExchange.Redis;
 using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 using WebApp;
+using WebApp.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Transactions;
 
 namespace WebApp.Consumers
 {
     public class TestConsumer : IConsumer<TestCommand>
     {
+        private readonly SqlConnection connection;
+        private readonly TestContext testContext;
+
+        public TestConsumer(SqlConnection connection, TestContext testContext)
+        {
+            this.connection = connection;
+            this.testContext = testContext;
+        }
+
         public async Task Consume(ConsumeContext<TestCommand> context)
         {
-            var database = Startup.connection.GetDatabase();
-            database.StringGet("test1");
+            //var database = Startup.connection.GetDatabase();
+            //database.StringGet("test1");
 
-            var command = Startup.sqlConnection.CreateCommand();
+            await testContext.TestEntities.ToListAsync();
+
+            var command = connection.CreateCommand();
             command.CommandText = "SELECT 1";
             await command.ExecuteNonQueryAsync();
         }

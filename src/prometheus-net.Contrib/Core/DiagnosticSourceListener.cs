@@ -24,9 +24,8 @@ namespace Prometheus.Contrib.Core
 
         public void OnNext(KeyValuePair<string, object> value)
         {
-            if (Activity.Current == null)
-                //CollectorEventSource.Log.NullActivity(value.Key);
-                return;
+            //if (Activity.Current == null)
+            //    return;
 
             try
             {
@@ -41,7 +40,6 @@ namespace Prometheus.Contrib.Core
             }
             catch (Exception ex)
             {
-                //CollectorEventSource.Log.UnknownErrorProcessingEvent(this.handler?.SourceName, value.Key, ex);
             }
         }
     }

@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  sqlserver:
+    image: microsoft/mssql-server-linux:2017-latest
+    environment:
+      - "ACCEPT_EULA=Y"
+      - "SA_PASSWORD=Max12345!"
+    ports:
+      - 11433:1433
+
+  redis:
+    image: redis:5
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - 6379:6379
+
+  activemq:
+    image: rmohr/activemq:latest
+    environment:
+      - "ACTIVEMQ_ADMIN_LOGIN=admin"
+      - "ACTIVEMQ_ADMIN_PASSWORD=admin"
+      - "ACTIVEMQ_LOGGER_LOGLEVEL=TRACE"
+    ports:
+      - 8161:8161
+      - 61616:61616
+      - 61613:61613

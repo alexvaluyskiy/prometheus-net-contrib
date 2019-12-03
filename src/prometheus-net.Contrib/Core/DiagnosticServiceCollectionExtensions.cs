@@ -1,7 +1,5 @@
 using Prometheus.Contrib.Core;
 using Prometheus.Contrib.Diagnostic;
-using Prometheus.Contrib.EventListeners;
-using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -22,21 +20,21 @@ namespace Microsoft.Extensions.DependencyInjection
             var massTransitListenerHandler = new DiagnosticSourceSubscriber(
                 name => new MassTransitListenerHandler(name),
                 listener => listener.Name.Equals("MassTransit"));
-            //massTransitListenerHandler.Subscribe();
+            massTransitListenerHandler.Subscribe();
 
             var sqlClientListenerHandler = new DiagnosticSourceSubscriber(
                 name => new SqlClientListenerHandler(name),
                 listener => listener.Name.Equals("SqlClientDiagnosticListener"));
-            sqlClientListenerHandler.Subscribe();
+            //sqlClientListenerHandler.Subscribe();
 
             var entityFrameworkListenerHandler = new DiagnosticSourceSubscriber(
-                name => new SqlClientListenerHandler(name),
-                listener => listener.Name.Equals("SqlClientDiagnosticListener"));
-            entityFrameworkListenerHandler.Subscribe();
+                name => new EntityFrameworkListenerHandler(name),
+                listener => listener.Name.Equals("Microsoft.EntityFrameworkCore"));
+            //entityFrameworkListenerHandler.Subscribe();
 
-            var listener = new RuntimeEventListener(TimeSpan.FromSeconds(10));
-            var aspNetCoreListener = new AspNetCoreEventListener(TimeSpan.FromSeconds(10));
-            var signalrListener = new SignalREventListener(TimeSpan.FromSeconds(10));
+            //var listener = new RuntimeEventListener(TimeSpan.FromSeconds(10));
+            //var aspNetCoreListener = new AspNetCoreEventListener(TimeSpan.FromSeconds(10));
+            //var signalrListener = new SignalREventListener(TimeSpan.FromSeconds(10));
         }
     }
 }

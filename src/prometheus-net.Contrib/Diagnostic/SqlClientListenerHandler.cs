@@ -15,7 +15,7 @@ namespace Prometheus.Contrib.Diagnostic
             public static readonly Histogram SqlCommandsDuration = Metrics.CreateHistogram("sqlclient_commands_duration_seconds", "The duration of DB requests processed by an application.", new HistogramConfiguration { Buckets = Histogram.ExponentialBuckets(0.001, 2, 16) });
             public static readonly Counter SqlCommandsErrors = Metrics.CreateCounter("sqlclient_commands_errors", "Total DB requests errors");
 
-            public static readonly Counter DbConnectionsTotal = Metrics.CreateCounter("sqlclient_onnections_total", "Total DB connections");
+            public static readonly Counter DbConnectionsTotal = Metrics.CreateCounter("sqlclient_connections_total", "Total DB connections");
             public static readonly Counter DbConnectionsErrors = Metrics.CreateCounter("sqlclient_connections_errors", "Total DB connections errors");
             public static readonly Counter DbTransactionsCommitedCount = Metrics.CreateCounter("sqlclient_transactions_committed_total", "Total committed transactions.");
             public static readonly Counter DbTransactionsRollbackCount = Metrics.CreateCounter("sqlclient_transactions_rollback_total", "Total rollback transactions.");
