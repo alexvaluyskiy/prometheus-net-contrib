@@ -11,13 +11,28 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  Major: '0'
+  Minor: '5'
+  Patch: '2'
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 - task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
     nobuild: true
-    versioningScheme: 'byBuildNumber'
+    versioningScheme: byPrereleaseNumber
+    majorVersion: '$(Major)'
+    minorVersion: '$(Minor)'
+    patchVersion: '$(Patch)'
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet push'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'Nuget'
+  
