@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <AssemblyName>Prometheus.Contrib</AssemblyName>
     <RootNamespace>Prometheus.Contrib</RootNamespace>
+    <AssemblyName>prometheus-net.Contrib</AssemblyName>
+    <PackageId>prometheus-net.Contrib</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

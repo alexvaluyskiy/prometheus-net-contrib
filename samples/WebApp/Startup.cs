@@ -14,6 +14,7 @@ using MassTransit.ActiveMqTransport.Configurators;
 using System;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
+using Microsoft.AspNetCore.Routing;
 
 namespace WebApp
 {
@@ -51,7 +52,7 @@ namespace WebApp
                     config.AddConsumer<TestConsumer>();
                 });
 
-            services.AddPrometheusMonitoring();
+            services.AddPrometheusAspNetCoreMetrics();
 
             services.AddSingleton(provider =>
             {
@@ -77,6 +78,7 @@ namespace WebApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapMetrics();
             });
         }
     }
