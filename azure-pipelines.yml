@@ -24,15 +24,16 @@ steps:
     command: 'pack'
     packagesToPack: '**/*.csproj'
     nobuild: true
+    verbosityPack: 'Normal'
     versioningScheme: byPrereleaseNumber
     majorVersion: '$(Major)'
     minorVersion: '$(Minor)'
     patchVersion: '$(Patch)'
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet push'
+- task: NuGetCommand@2
   inputs:
     command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'Nuget'
+    verbosityPush: 'Normal'
   
