@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\prometheus-net.Contrib\prometheus-net.Contrib.csproj" />
+    <ProjectReference Include="..\..\src\prometheus-net.EntityFramework\prometheus-net.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\prometheus-net.MassTransit\prometheus-net.MassTransit.csproj" />
   </ItemGroup>
 
 </Project>
