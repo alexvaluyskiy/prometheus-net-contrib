@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Prometheus.Contrib.Core
 {
-    internal class PropertyFetcher
+    public class PropertyFetcher
     {
         private readonly string propertyName;
         private PropertyFetch innerFetcher;

@@ -1,0 +1,11 @@
+  <Project>
+    <PropertyGroup Label="Package information">
+    <PackageLicenseExpression></PackageLicenseExpression>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <PackageProjectUrl>https://github.com/alexvaluyskiy/prometheus-net-contrib</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/alexvaluyskiy/prometheus-net-contrib</RepositoryUrl>
+      <Authors>alexvaluyskiy</Authors>
+      <Company>alexvaluyskiy</Company>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    </PropertyGroup>
+  </Project>
