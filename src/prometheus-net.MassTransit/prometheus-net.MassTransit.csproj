@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AssemblyName>prometheus-net.MassTransit</AssemblyName>
+    <RootNamespace>prometheus-net.MassTransit</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\prometheus-net.Contrib\prometheus-net.Contrib.csproj" />
+  </ItemGroup>
+
+</Project>

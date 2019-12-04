@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-namespace Prometheus.Contrib.Diagnostic
+namespace Prometheus.Contrib.Diagnostics
 {
     public class SqlClientListenerHandler : DiagnosticListenerHandler
     {
@@ -54,25 +54,15 @@ namespace Prometheus.Contrib.Diagnostic
         public override void OnCustom(string name, Activity activity, object payload)
         {
             if (name.Contains("WriteCommand"))
-            {
                 OnWriteCommand(name, payload);
-            }
             else if (name.Contains("WriteConnectionOpen"))
-            {
                 OnWriteConnectionOpen(name, payload);
-            }
             else if (name.Contains("WriteConnectionClose"))
-            {
                 OnWriteConnectionClose(name, payload);
-            }
             else if (name.Contains("WriteTransactionCommit"))
-            {
                 OnWriteTransactionCommit(name, payload);
-            }
             else if (name.Contains("WriteTransactionRollback"))
-            {
                 OnWriteTransactionRollback(name, payload);
-            }
         }
 
         public void OnWriteCommand(string name, object payload)
@@ -233,9 +223,7 @@ namespace Prometheus.Contrib.Diagnostic
         {
             var genericDictionary = new Dictionary<string, long>();
             foreach (var key in currentStatistics.Keys)
-            {
                 genericDictionary.Add(key.ToString(), (long)currentStatistics[key]);
-            }
 
             Statistics[connectionId] = genericDictionary;
 

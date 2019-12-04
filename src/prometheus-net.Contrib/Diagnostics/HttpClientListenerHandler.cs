@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Net.Http;
 
-namespace Prometheus.Contrib.Diagnostic
+namespace Prometheus.Contrib.Diagnostics
 {
     public class HttpClientListenerHandler : DiagnosticListenerHandler
     {
@@ -33,11 +33,9 @@ namespace Prometheus.Contrib.Diagnostic
             var response = stopResponseFetcher.Fetch(payload);
 
             if (response is HttpResponseMessage httpResponse)
-            {
                 PrometheusCounters.HttpClientRequestsDuration
                     .WithLabels(httpResponse.StatusCode.ToString("D"), httpResponse.RequestMessage.RequestUri.Host)
                     .Observe(activity.Duration.TotalSeconds);
-            }
         }
 
         public override void OnException(Activity activity, object payload)

@@ -1,38 +1,49 @@
 using Prometheus.Contrib.Core;
-using Prometheus.Contrib.Diagnostic;
+using Prometheus.Contrib.Diagnostics;
 using Prometheus.Contrib.EventListeners;
-using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class DiagnosticServiceCollectionExtensions
     {
-        public static void AddPrometheusMonitoring(this IServiceCollection services)
+        public static void AddPrometheusAspNetCoreMetrics(this IServiceCollection services)
+        {
+            var aspNetCoreListenerHandler = new DiagnosticSourceSubscriber(
+                name => new AspNetCoreListenerHandler(name),
+                listener => listener.Name.Equals("Microsoft.AspNetCore"));
+            aspNetCoreListenerHandler.Subscribe();
+
+            services.AddSingleton(aspNetCoreListenerHandler);
+        }
+
+        public static void AddPrometheusHttpClientMetrics(this IServiceCollection services)
         {
             var httpClientListenerHandler = new DiagnosticSourceSubscriber(
                 name => new HttpClientListenerHandler(name),
                 listener => listener.Name.Equals("HttpHandlerDiagnosticListener"));
             httpClientListenerHandler.Subscribe();
 
-            var aspNetCoreListenerHandler = new DiagnosticSourceSubscriber(
-                name => new AspNetCoreListenerHandler(name),
-                listener => listener.Name.Equals("Microsoft.AspNetCore"));
-            aspNetCoreListenerHandler.Subscribe();
+            services.AddSingleton(httpClientListenerHandler);
+        }
 
-            var massTransitListenerHandler = new DiagnosticSourceSubscriber(
-                name => new MassTransitListenerHandler(name),
-                listener => listener.Name.Equals("MassTransit"));
-            massTransitListenerHandler.Subscribe();
+        public static void AddPrometheusEntityFrameworkMetrics(this IServiceCollection services)
+        {
+            var entityFrameworkListenerHandler = new DiagnosticSourceSubscriber(
+                name => new EntityFrameworkListenerHandler(name),
+                listener => listener.Name.Equals("Microsoft.EntityFrameworkCore"));
+            entityFrameworkListenerHandler.Subscribe();
 
+            services.AddSingleton(entityFrameworkListenerHandler);
+        }
+
+        public static void AddPrometheusSqlClientMetrics(this IServiceCollection services)
+        {
             var sqlClientListenerHandler = new DiagnosticSourceSubscriber(
                 name => new SqlClientListenerHandler(name),
                 listener => listener.Name.Equals("SqlClientDiagnosticListener"));
             sqlClientListenerHandler.Subscribe();
 
-            var entityFrameworkListenerHandler = new DiagnosticSourceSubscriber(
-                name => new EntityFrameworkListenerHandler(name),
-                listener => listener.Name.Equals("Microsoft.EntityFrameworkCore"));
-            entityFrameworkListenerHandler.Subscribe();
+            services.AddSingleton(sqlClientListenerHandler);
         }
 
         public static void AddPrometheusCounters(this IServiceCollection services)

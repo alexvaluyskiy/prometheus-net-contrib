@@ -2,7 +2,7 @@
 using Prometheus.Contrib.Core;
 using System.Diagnostics;
 
-namespace Prometheus.Contrib.Diagnostic
+namespace Prometheus.Contrib.Diagnostics
 {
     public class EntityFrameworkListenerHandler : DiagnosticListenerHandler
     {
@@ -33,9 +33,7 @@ namespace Prometheus.Contrib.Diagnostic
                     break;
                 case "Microsoft.EntityFrameworkCore.Database.Connection.ConnectionClosed":
                     if (payload is ConnectionEndEventData connectionEnd)
-                    {
                         PrometheusCounters.EfCoreConnectionsTotal.Inc();
-                    }
                     break;
                 case "Microsoft.EntityFrameworkCore.Database.Connection.ConnectionError":
                     PrometheusCounters.EfCoreConnectionsErrors.Inc();
@@ -50,9 +48,7 @@ namespace Prometheus.Contrib.Diagnostic
                 case "Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted":
                     {
                         if (payload is CommandExecutedEventData commandExecuted)
-                        {
                             PrometheusCounters.EfCoreRequestsDuration.Observe(commandExecuted.Duration.TotalSeconds);
-                        }
                     }
                     break;
                 case "Microsoft.EntityFrameworkCore.Database.Command.CommandError":
@@ -66,23 +62,17 @@ namespace Prometheus.Contrib.Diagnostic
                     break;
                 case "Microsoft.EntityFrameworkCore.Database.Transaction.TransactionCommitted":
                     if (payload is TransactionEndEventData _)
-                    {
                         PrometheusCounters.EfCoreTransactionsCommitedCount.Inc();
-                    }
                     break;
                 case "Microsoft.EntityFrameworkCore.Database.Transaction.TransactionRollingBack":
                     break;
                 case "Microsoft.EntityFrameworkCore.Database.Transaction.TransactionRolledBack":
                     if (payload is TransactionEndEventData _)
-                    {
                         PrometheusCounters.EfCoreTransactionsRollbackCount.Inc();
-                    }
                     break;
                 case "Microsoft.EntityFrameworkCore.Database.Transaction.TransactionError":
                     if (payload is TransactionErrorEventData _)
-                    {
                         PrometheusCounters.EfCoreTransactionsErrorCount.Inc();
-                    }
                     break;
                 case "Microsoft.EntityFrameworkCore.Database.Transaction.TransactionUsed":
                     break;

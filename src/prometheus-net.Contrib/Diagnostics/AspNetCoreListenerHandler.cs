@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Prometheus.Contrib.Core;
 using System.Diagnostics;
 
-namespace Prometheus.Contrib.Diagnostic
+namespace Prometheus.Contrib.Diagnostics
 {
     public class AspNetCoreListenerHandler : DiagnosticListenerHandler
     {
