@@ -26,16 +26,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton(httpClientListenerHandler);
         }
 
-        public static void AddPrometheusEntityFrameworkMetrics(this IServiceCollection services)
-        {
-            var entityFrameworkListenerHandler = new DiagnosticSourceSubscriber(
-                name => new EntityFrameworkListenerHandler(name),
-                listener => listener.Name.Equals("Microsoft.EntityFrameworkCore"));
-            entityFrameworkListenerHandler.Subscribe();
-
-            services.AddSingleton(entityFrameworkListenerHandler);
-        }
-
         public static void AddPrometheusSqlClientMetrics(this IServiceCollection services)
         {
             var sqlClientListenerHandler = new DiagnosticSourceSubscriber(
