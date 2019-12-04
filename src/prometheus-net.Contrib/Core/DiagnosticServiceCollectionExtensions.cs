@@ -12,27 +12,27 @@ namespace Microsoft.Extensions.DependencyInjection
             var httpClientListenerHandler = new DiagnosticSourceSubscriber(
                 name => new HttpClientListenerHandler(name),
                 listener => listener.Name.Equals("HttpHandlerDiagnosticListener"));
-            //httpClientListenerHandler.Subscribe();
+            httpClientListenerHandler.Subscribe();
 
             var aspNetCoreListenerHandler = new DiagnosticSourceSubscriber(
                 name => new AspNetCoreListenerHandler(name),
                 listener => listener.Name.Equals("Microsoft.AspNetCore"));
-            //aspNetCoreListenerHandler.Subscribe();
+            aspNetCoreListenerHandler.Subscribe();
 
             var massTransitListenerHandler = new DiagnosticSourceSubscriber(
                 name => new MassTransitListenerHandler(name),
                 listener => listener.Name.Equals("MassTransit"));
-            //massTransitListenerHandler.Subscribe();
+            massTransitListenerHandler.Subscribe();
 
             var sqlClientListenerHandler = new DiagnosticSourceSubscriber(
                 name => new SqlClientListenerHandler(name),
                 listener => listener.Name.Equals("SqlClientDiagnosticListener"));
-            //sqlClientListenerHandler.Subscribe();
+            sqlClientListenerHandler.Subscribe();
 
             var entityFrameworkListenerHandler = new DiagnosticSourceSubscriber(
                 name => new EntityFrameworkListenerHandler(name),
                 listener => listener.Name.Equals("Microsoft.EntityFrameworkCore"));
-            //entityFrameworkListenerHandler.Subscribe();
+            entityFrameworkListenerHandler.Subscribe();
         }
 
         public static void AddPrometheusCounters(this IServiceCollection services)

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Routing;
 using Prometheus.Contrib.Core;
 using System.Diagnostics;
 
@@ -13,7 +15,7 @@ namespace Prometheus.Contrib.Diagnostic
                 "The duration of HTTP requests processed by an ASP.NET Core application.",
                 new HistogramConfiguration
                 {
-                    LabelNames = new[] { "code", "method" },
+                    LabelNames = new[] { "code", "method", "route" },
                     Buckets = Histogram.ExponentialBuckets(0.001, 2, 16)
                 });
 
@@ -30,8 +32,11 @@ namespace Prometheus.Contrib.Diagnostic
         {
             if (payload is HttpContext httpContext)
             {
+                var endpointFeature = httpContext.Features[typeof(IEndpointFeature)] as IEndpointFeature;
+                string route = endpointFeature?.Endpoint is RouteEndpoint endpoint ? endpoint.RoutePattern.RawText : string.Empty;
+
                 PrometheusCounters.AspNetCoreRequestsDuration
-                   .WithLabels(httpContext.Response.StatusCode.ToString(), httpContext.Request.Method)
+                   .WithLabels(httpContext.Response.StatusCode.ToString(), httpContext.Request.Method, route)
                    .Observe(activity.Duration.TotalSeconds);
             }
         }
