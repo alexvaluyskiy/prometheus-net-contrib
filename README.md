@@ -2,7 +2,7 @@
 
 [![Build status](https://dev.azure.com/alexvaluiskyi/metrics/_apis/build/status/alexvaluyskiy.prometheus-net-contrib)](https://dev.azure.com/alexvaluiskyi/metrics/_build/latest?definitionId=13) [![Nuget](https://img.shields.io/nuget/v/prometheus-net.Contrib.svg)](https://www.nuget.org/packages/prometheus-net.Contrib/)
 
-A plugin for the prometheus-net package, exposing event counters and diagnostic listeners for .NET Core Runtime, ASP.NET Core, SignalR, etc.
+A plugin for the prometheus-net package, exposing event counters and diagnostic listeners for .NET Core Runtime, ASP.NET Core, SignalR, GRPC, etc.
 
 ## Installation
 Supports .NET core v3.0+ only.
@@ -74,6 +74,29 @@ public class Startup
 | signalr_counters_connections_timed_out | Gauge  | Total Connections Timed Out  |
 | signalr_counters_current_connections | Gauge  | Current Connections  |
 | signalr_counters_connections_duration | Gauge  | Average Connection Duration |
+
+### ASP .NET Core GRPC Server
+
+| Name | Type | Description |
+|--|--|--|
+| grpc_server_counters_total_calls  | Gauge  | Total Calls  |
+| grpc_server_counters_current_calls | Gauge  | Current Calls  |
+| grpc_server_counters_calls_failed | Gauge  | Total Calls Failed  |
+| grpc_server_counters_calls_deadline_exceeded | Gauge  | Total Calls Deadline Exceeded |
+| grpc_server_counters_messages_sent | Gauge  | Total Messages Sent |
+| grpc_server_counters_messages_received | Gauge  | Total Messages Received |
+| grpc_server_counters_calls_unimplemented | Gauge  | Total Calls Unimplemented |
+
+### ASP .NET Core GRPC Client
+
+| Name | Type | Description |
+|--|--|--|
+| grpc_client_counters_total_calls  | Gauge  | Total Calls  |
+| grpc_client_counters_current_calls | Gauge  | Current Calls  |
+| grpc_client_counters_calls_failed | Gauge  | Total Calls Failed  |
+| grpc_client_counters_calls_deadline_exceeded | Gauge  | Total Calls Deadline Exceeded |
+| grpc_client_counters_messages_sent | Gauge  | Total Messages Sent |
+| grpc_client_counters_messages_received | Gauge  | Total Messages Received |
 
 ## .NET Core Diagnostic Listeners
 ### ASP .NET Core
