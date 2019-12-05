@@ -13,9 +13,27 @@ dotnet add package prometheus-net.Contrib
 
 And then start the collectors:
 ```csharp
-services.AddPrometheusCounters();
-services.AddPrometheusAspNetCoreMetrics();
-services.AddPrometheusHttpClientMetrics();
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        ...
+        services.AddPrometheusCounters();
+        services.AddPrometheusAspNetCoreMetrics();
+        services.AddPrometheusHttpClientMetrics();
+        services.AddPrometheusSqlClientMetrics();
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        app.UseEndpoints(endpoints =>
+        {
+            ...
+            endpoints.MapMetrics();
+        });
+    }
+}
+
 ```
 
 ## .NET Core 3.0 Event Counters
@@ -81,3 +99,23 @@ services.AddPrometheusHttpClientMetrics();
 | sqlclient_connections_errors  | Counter  | Total DB connections errors  |
 | sqlclient_transactions_committed_total | Counter  | Total committed transactions |
 | sqlclient_transactions_rollback_total  | Counter  | Total HTTP requests sent errors  |
+| sqlclient_received_buffers  | Gauge  | 	Returns the number of tabular data stream (TDS) packets received by the provider from SQL Server  |
+| sqlclient_sent_buffers  | Gauge  | Returns the number of TDS packets sent to SQL Server   |
+| sqlclient_received_bytes  | Gauge  | Returns the number of bytes of data in the TDS packets received by the provider from SQL Server  |
+| sqlclient_sent_bytes  | Gauge  | Returns the number of bytes of data sent to SQL Server in TDS packets  |
+| sqlclient_connection_time  | Gauge  | The amount of time (in milliseconds) that the connection has been opened  |
+| sqlclient_cursor_open  | Gauge  | Returns the number of times a cursor was open through the connection |
+| sqlclient_execution_time  | Gauge  |   |
+| sqlclient_idu_count  | Gauge  | Returns the total number of INSERT, DELETE, and UPDATE statements executed through the connection  |
+| sqlclient_idu_rows  | Gauge  | Returns the total number of rows affected by INSERT, DELETE, and UPDATE statements executed through the connection  |
+| sqlclient_network_server_time  | Gauge  | Returns the cumulative amount of time (in milliseconds) that the provider spent waiting for replies from the server  |
+| sqlclient_prepared_exec  | Gauge  | Returns the number of prepared commands executed through the connection  |
+| sqlclient_prepares  | Gauge  | Returns the number of statements prepared through the connection  |
+| sqlclient_select_count  | Gauge  | Returns the number of SELECT statements executed through the connection  |
+| sqlclient_select_rows  | Gauge  | Returns the number of rows selected  |
+| sqlclient_server_roundtrips  | Gauge  | Returns the number of times the connection sent commands to the server and got a reply back  |
+| sqlclient_sum_result_sets  | Gauge  | Returns the number of result sets  |
+| sqlclient_transacions  | Gauge  | Returns the number of user transactions  |
+| sqlclient_unprepared_exec  | Gauge  | Returns the number of unprepared statements executed through the connection  |
+
+
