@@ -103,8 +103,8 @@ public class Startup
 
 | Name | Type | Description |
 |--|--|--|
-| http_request_duration_seconds | Histogram  |  The duration of HTTP requests processed by an ASP.NET Core application  |
-| http_request_errors  | Counter  | Total HTTP requests received errors  |
+| aspnetcore_request_duration_seconds | Histogram  |  The duration of HTTP requests processed by an ASP.NET Core application  |
+| aspnetcore_request_errors  | Counter  | Total HTTP requests received errors  |
 
 ### HTTP Client
 

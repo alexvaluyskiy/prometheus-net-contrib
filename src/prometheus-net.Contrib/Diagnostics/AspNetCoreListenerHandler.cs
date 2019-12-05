@@ -11,7 +11,7 @@ namespace Prometheus.Contrib.Diagnostics
         private static class PrometheusCounters
         {
             public static readonly Histogram AspNetCoreRequestsDuration = Metrics.CreateHistogram(
-                "http_request_duration_seconds",
+                "aspnetcore_request_duration_seconds",
                 "The duration of HTTP requests processed by an ASP.NET Core application.",
                 new HistogramConfiguration
                 {
@@ -20,7 +20,7 @@ namespace Prometheus.Contrib.Diagnostics
                 });
 
             public static readonly Counter AspNetCoreRequestsErrors = Metrics.CreateCounter(
-                "http_request_errors",
+                "aspnetcore_request_errors",
                 "Total HTTP requests received errors.");
         }
 
