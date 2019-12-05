@@ -16,19 +16,22 @@ variables:
   Patch: '2'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+- task: DotNetCoreInstaller@0
+  displayName: 'Use .NET Core sdk 3.0'
+  inputs:
+    version: 3.0.100
+- script: 'dotnet tool restore'
+  displayName: 'dotnet tool restore'
+- script: 'dotnet dotnet-gitversion /output buildserver /nofetch'
+  displayName: 'set GitVersion'
+  workingDirectory: src
 - task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
   inputs:
-    command: 'pack'
-    packagesToPack: '**/*.csproj'
-    nobuild: true
-    verbosityPack: 'Normal'
-    versioningScheme: byPrereleaseNumber
-    majorVersion: '$(Major)'
-    minorVersion: '$(Minor)'
-    patchVersion: '$(Patch)'
+    command: 'custom'
+    projects: src/**/*.csproj
+    custom: pack
+    arguments: "--output $(Build.ArtifactStagingDirectory) --include-symbols /p:Configuration=$(BuildConfiguration) --verbosity Normal /p:Version=$(GitVersion.NuGetVersion)"
 - task: NuGetCommand@2
   inputs:
     command: 'push'
