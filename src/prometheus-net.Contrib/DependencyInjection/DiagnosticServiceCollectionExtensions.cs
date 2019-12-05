@@ -36,6 +36,16 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton(sqlClientListenerHandler);
         }
 
+        public static void AddPrometheusGrpcClientMetrics(this IServiceCollection services)
+        {
+            var grpcClientListenerHandler = new DiagnosticSourceSubscriber(
+                name => new GrpcClientListenerHandler(name),
+                listener => listener.Name.Equals("Grpc.Net.Client"));
+            grpcClientListenerHandler.Subscribe();
+
+            services.AddSingleton(grpcClientListenerHandler);
+        }
+
         public static void AddPrometheusCounters(this IServiceCollection services)
         {
             services.AddSingleton(new CountersEventListener());
