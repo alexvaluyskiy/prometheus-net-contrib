@@ -34,7 +34,6 @@ public class Startup
         });
     }
 }
-
 ```
 
 ## .NET Core 3.0 Event Counters
@@ -141,5 +140,3 @@ public class Startup
 | sqlclient_sum_result_sets  | Gauge  | Returns the number of result sets  |
 | sqlclient_transacions  | Gauge  | Returns the number of user transactions  |
 | sqlclient_unprepared_exec  | Gauge  | Returns the number of unprepared statements executed through the connection  |
-
-

@@ -8,7 +8,7 @@ namespace Prometheus.EntityFramework.Diagnostics
     {
         private static class PrometheusCounters
         {
-            public static readonly Histogram EfCoreRequestsDuration = Metrics.CreateHistogram("efcore_commandss_duration_seconds", "The duration of DB requests processed by an application.");
+            public static readonly Histogram EfCoreRequestsDuration = Metrics.CreateHistogram("efcore_commands_duration_seconds", "The duration of DB requests processed by an application.");
 
             public static readonly Counter EfCoreConnectionsTotal = Metrics.CreateCounter("efcore_connections_total", "Total DB connections");
             public static readonly Counter EfCoreConnectionsErrors = Metrics.CreateCounter("efcore_connections_errors", "Total DB connections errors");
