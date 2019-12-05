@@ -56,4 +56,28 @@ services.AddPrometheusHttpClientMetrics();
 | signalr_counters_current_connections | Gauge  | Current Connections  |
 | signalr_counters_connections_duration | Gauge  | Average Connection Duration |
 
+## .NET Core Diagnostic Listeners
+### ASP .NET Core
 
+| Name | Type | Description |
+|--|--|--|
+| http_request_duration_seconds | Histogram  |  The duration of HTTP requests processed by an ASP.NET Core application  |
+| http_request_errors  | Counter  | Total HTTP requests received errors  |
+
+### HTTP Client
+
+| Name | Type | Description |
+|--|--|--|
+| httpclient_requests_duration_seconds | Histogram  | Time between first byte of request headers sent to last byte of response received |
+| httpclient_requests_errors  | Counter  | Total HTTP requests sent errors  |
+
+### SQL Client
+
+| Name | Type | Description |
+|--|--|--|
+| sqlclient_commands_duration_seconds | Histogram  | The duration of DB requests processed by an application |
+| sqlclient_commands_errors  | Counter  | Total DB requests errors  |
+| sqlclient_connections_total | Counter  | Total DB connections |
+| sqlclient_connections_errors  | Counter  | Total DB connections errors  |
+| sqlclient_transactions_committed_total | Counter  | Total committed transactions |
+| sqlclient_transactions_rollback_total  | Counter  | Total HTTP requests sent errors  |
