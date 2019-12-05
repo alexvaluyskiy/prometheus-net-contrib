@@ -42,19 +42,19 @@ public class Startup
 ### Runtime
 | Name | Type | Description |
 |--|--|--|
-| runtime_cpu_usage | Gauge  | CPU usage in percents  |
-| runtime_memory_working_set | Gauge  | Working Set in megabytes  |
-| runtime_gc_heap_size | Gauge  | GC Heap Size in megabytes  |
-| runtime_gc_count | Gauge  | GC Count  |
-| runtime_exception_count | Gauge  | Exception Count  |
-| runtime_threadpool_thread_count | Gauge  | ThreadPool Thread Count  |
-| runtime_threadpool_queue_length | Gauge  | Monitor Lock Contention Count  |
-| runtime_threadpool_completed_items_count | Gauge  | ThreadPool Queue Length  |
-| runtime_time_in_gc | Gauge  | ThreadPool Completed Work Item Count  |
-| runtime_gc_size | Gauge  | GC size in bytes  |
-| runtime_alloc_rate | Gauge  | Allocation Rate in bytes  |
-| runtime_assembly_count | Gauge  | Number of Assemblies Loaded  |
-| runtime_active_timer_count | Gauge  | Number of Active Timers  |
+| runtime_counters_cpu_usage | Gauge  | CPU usage in percents  |
+| runtime_counters_memory_working_set | Gauge  | Working Set in megabytes  |
+| runtime_counters_gc_heap_size | Gauge  | GC Heap Size in megabytes  |
+| runtime_counters_gc_count | Gauge  | GC Count  |
+| runtime_counters_exception_count | Gauge  | Exception Count  |
+| runtime_counters_threadpool_thread_count | Gauge  | ThreadPool Thread Count  |
+| runtime_counters_threadpool_queue_length | Gauge  | Monitor Lock Contention Count  |
+| runtime_counters_threadpool_completed_items_count | Gauge  | ThreadPool Queue Length  |
+| runtime_counters_time_in_gc | Gauge  | ThreadPool Completed Work Item Count  |
+| runtime_counters_gc_size | Gauge  | GC size in bytes  |
+| runtime_counters_alloc_rate | Gauge  | Allocation Rate in bytes  |
+| runtime_counters_assembly_count | Gauge  | Number of Assemblies Loaded  |
+| runtime_counters_active_timer_count | Gauge  | Number of Active Timers  |
 
 ### ASP .NET Core
 
