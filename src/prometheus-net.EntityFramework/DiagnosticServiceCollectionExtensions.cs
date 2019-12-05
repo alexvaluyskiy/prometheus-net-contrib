@@ -1,5 +1,5 @@
 using Prometheus.Contrib.Core;
-using Prometheus.Contrib.Diagnostics;
+using Prometheus.EntityFramework.Diagnostics;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

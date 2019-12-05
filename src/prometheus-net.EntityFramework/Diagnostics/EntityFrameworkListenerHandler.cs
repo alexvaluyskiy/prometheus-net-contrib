@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using System.Diagnostics;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Prometheus.Contrib.Core;
-using System.Diagnostics;
 
-namespace Prometheus.Contrib.Diagnostics
+namespace Prometheus.EntityFramework.Diagnostics
 {
     public class EntityFrameworkListenerHandler : DiagnosticListenerHandler
     {

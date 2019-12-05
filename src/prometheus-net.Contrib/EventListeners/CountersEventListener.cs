@@ -1,6 +1,7 @@
 ﻿using Prometheus.Contrib.EventListeners.Adapters;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
+using Prometheus.Contrib.Core;
 
 namespace Prometheus.Contrib.EventListeners
 {

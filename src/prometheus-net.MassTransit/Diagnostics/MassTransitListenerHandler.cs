@@ -1,8 +1,8 @@
-﻿using Prometheus.Contrib.Core;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Threading;
+using Prometheus.Contrib.Core;
 
-namespace Prometheus.Contrib.Diagnostic
+namespace Prometheus.MassTransit.Diagnostics
 {
     public class MassTransitListenerHandler : DiagnosticListenerHandler
     {

@@ -1,4 +1,6 @@
-﻿namespace Prometheus.Contrib.EventListeners.Adapters
+﻿using Prometheus.Contrib.Core;
+
+namespace Prometheus.Contrib.EventListeners.Adapters
 {
     public class PrometheusRuntimeCounterAdapter : ICounterAdapter
     {

@@ -1,7 +1,5 @@
 using Prometheus.Contrib.Core;
-using Prometheus.Contrib.Diagnostic;
-using Prometheus.Contrib.Diagnostics;
-using Prometheus.Contrib.EventListeners;
+using Prometheus.MassTransit.Diagnostics;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <AssemblyName>prometheus-net.MassTransit</AssemblyName>
-    <RootNamespace>prometheus-net.MassTransit</RootNamespace>
+    <RootNamespace>Prometheus.MassTransit</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

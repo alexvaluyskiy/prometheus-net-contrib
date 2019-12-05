@@ -1,4 +1,4 @@
-﻿namespace Prometheus.Contrib.EventListeners
+﻿namespace Prometheus.Contrib.Core
 {
     public interface ICounterAdapter
     {

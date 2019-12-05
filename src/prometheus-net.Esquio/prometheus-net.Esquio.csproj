@@ -1,13 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <AssemblyName>prometheus-net.EntityFramework</AssemblyName>
-    <RootNamespace>Prometheus.EntityFramework</RootNamespace>
+    <AssemblyName>prometheus-net.Esquio</AssemblyName>
+    <RootNamespace>Prometheus.Esquio</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.1" />
+    <PackageReference Include="Esquio" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
