@@ -1,5 +1,6 @@
 # prometheus-net-contrib
-[![Nuget](https://img.shields.io/nuget/v/prometheus-net.Contrib.svg)](https://www.nuget.org/packages/prometheus-net.Contrib/) ![Nuget](https://img.shields.io/nuget/dt/prometheus-net.Contrib.svg)
+
+[![Build status](https://dev.azure.com/alexvaluiskyi/metrics/_apis/build/status/alexvaluyskiy.prometheus-net-contrib)](https://dev.azure.com/alexvaluiskyi/metrics/_build/latest?definitionId=13) [![Nuget](https://img.shields.io/nuget/v/prometheus-net.Contrib.svg)](https://www.nuget.org/packages/prometheus-net.Contrib/)
 
 A plugin for the prometheus-net package, exposing event counters and diagnostic listeners for .NET Core Runtime, ASP.NET Core, SignalR, etc.
 
