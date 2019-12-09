@@ -1,4 +1,5 @@
-﻿using Prometheus.Contrib.Core;
+﻿using System;
+using Prometheus.Contrib.Core;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -12,13 +13,21 @@ namespace Prometheus.Contrib.Diagnostics
     {
         private static class PrometheusCounters
         {
-            public static readonly Histogram SqlCommandsDuration = Metrics.CreateHistogram("sqlclient_commands_duration_seconds", "The duration of DB requests processed by an application.", new HistogramConfiguration { Buckets = Histogram.ExponentialBuckets(0.001, 2, 16) });
-            public static readonly Counter SqlCommandsErrors = Metrics.CreateCounter("sqlclient_commands_errors", "Total DB requests errors");
+            public static readonly Histogram SqlCommandsDuration = Metrics.CreateHistogram(
+                "sqlclient_command_duration_seconds",
+                "The duration of DB requests processed by an application.",
+                new HistogramConfiguration { Buckets = Histogram.ExponentialBuckets(0.001, 2, 16) });
+            public static readonly Counter SqlCommandsErrors = Metrics.CreateCounter(
+                "sqlclient_command_errors_total", 
+                "Total DB requests errors",
+                new CounterConfiguration { LabelNames = new[] { "type" } });
 
-            public static readonly Counter DbConnectionsTotal = Metrics.CreateCounter("sqlclient_connections_total", "Total DB connections");
-            public static readonly Counter DbConnectionsErrors = Metrics.CreateCounter("sqlclient_connections_errors", "Total DB connections errors");
-            public static readonly Counter DbTransactionsCommitedCount = Metrics.CreateCounter("sqlclient_transactions_committed_total", "Total committed transactions.");
-            public static readonly Counter DbTransactionsRollbackCount = Metrics.CreateCounter("sqlclient_transactions_rollback_total", "Total rollback transactions.");
+            public static readonly Counter DbConnectionsOpenTotal = Metrics.CreateCounter("sqlclient_connection_opened_total", "Total opened DB connections");
+            public static readonly Counter DbConnectionsCloseTotal = Metrics.CreateCounter("sqlclient_connection_closed_total", "Total closed DB connections");
+            public static readonly Counter DbConnectionsErrors = Metrics.CreateCounter("sqlclient_connection_errors_total", "Total DB connections errors");
+
+            public static readonly Counter DbTransactionsCommitedCount = Metrics.CreateCounter("sqlclient_transaction_committed_total", "Total committed transactions.");
+            public static readonly Counter DbTransactionsRollbackCount = Metrics.CreateCounter("sqlclient_transaction_rollback_total", "Total rollback transactions.");
 
             public static readonly Gauge SqlBuffersReceived = Metrics.CreateGauge("sqlclient_received_buffers", "Number of buffers received");
             public static readonly Gauge SqlBuffersSent = Metrics.CreateGauge("sqlclient_sent_buffers", "Number of buffers sent");
@@ -41,7 +50,6 @@ namespace Prometheus.Contrib.Diagnostics
         }
 
         private readonly PropertyFetcher connectionFetcher = new PropertyFetcher("ConnectionId");
-        private readonly PropertyFetcher exceptionFetcher = new PropertyFetcher("Exception");
         private readonly PropertyFetcher statisticsFetcher = new PropertyFetcher("Statistics");
 
         private ConcurrentDictionary<string, Dictionary<string, long>> Statistics = new ConcurrentDictionary<string, Dictionary<string, long>>();
@@ -69,17 +77,15 @@ namespace Prometheus.Contrib.Diagnostics
         {
             switch (name)
             {
-                case "System.Data.SqlClient.WriteCommandBefore":
                 case "Microsoft.Data.SqlClient.WriteCommandBefore":
                     {
                         commandTimestampContext.Value = Stopwatch.GetTimestamp();
                     }
                     break;
-                case "System.Data.SqlClient.WriteCommandAfter":
                 case "Microsoft.Data.SqlClient.WriteCommandAfter":
                     {
                         long operationTimeStamp = Stopwatch.GetTimestamp() - commandTimestampContext.Value;
-                        PrometheusCounters.SqlCommandsDuration.Observe(operationTimeStamp);
+                        PrometheusCounters.SqlCommandsDuration.Observe(TimeSpan.FromTicks(operationTimeStamp).TotalSeconds);
 
                         if (statisticsFetcher.Fetch(payload) is IDictionary currentStatistics)
                         {
@@ -89,12 +95,9 @@ namespace Prometheus.Contrib.Diagnostics
                         }
                     }
                     break;
-                case "System.Data.SqlClient.WriteCommandError":
                 case "Microsoft.Data.SqlClient.WriteCommandError":
                     {
-                        var exception = exceptionFetcher.Fetch(payload);
-                        // TODO: add exception message
-                        PrometheusCounters.SqlCommandsErrors.Inc();
+                        PrometheusCounters.SqlCommandsErrors.WithLabels("command").Inc();
                     }
                     break;
             }
@@ -104,17 +107,15 @@ namespace Prometheus.Contrib.Diagnostics
         {
             switch (name)
             {
-                case "System.Data.SqlClient.WriteConnectionOpenBefore":
                 case "Microsoft.Data.SqlClient.WriteConnectionOpenBefore":
                     {
                     }
                     break;
-                case "System.Data.SqlClient.WriteConnectionOpenAfter":
                 case "Microsoft.Data.SqlClient.WriteConnectionOpenAfter":
                     {
+                        PrometheusCounters.DbConnectionsOpenTotal.Inc();
                     }
                     break;
-                case "System.Data.SqlClient.WriteConnectionOpenError":
                 case "Microsoft.Data.SqlClient.WriteConnectionOpenError":
                     {
                         PrometheusCounters.DbConnectionsErrors.Inc();
@@ -127,18 +128,15 @@ namespace Prometheus.Contrib.Diagnostics
         {
             switch (name)
             {
-                case "System.Data.SqlClient.WriteConnectionCloseBefore":
                 case "Microsoft.Data.SqlClient.WriteConnectionCloseBefore":
                     {
                     }
                     break;
-                case "System.Data.SqlClient.WriteConnectionCloseAfter":
                 case "Microsoft.Data.SqlClient.WriteConnectionCloseAfter":
                     {
-                        PrometheusCounters.DbConnectionsTotal.Inc();
+                        PrometheusCounters.DbConnectionsCloseTotal.Inc();
                     }
                     break;
-                case "System.Data.SqlClient.WriteConnectionCloseError":
                 case "Microsoft.Data.SqlClient.WriteConnectionCloseError":
                     {
                         PrometheusCounters.DbConnectionsErrors.Inc();
@@ -151,21 +149,18 @@ namespace Prometheus.Contrib.Diagnostics
         {
             switch (name)
             {
-                case "System.Data.SqlClient.WriteTransactionCommitBefore":
                 case "Microsoft.Data.SqlClient.WriteTransactionCommitBefore":
                     {
                     }
                     break;
-                case "System.Data.SqlClient.WriteTransactionCommitAfter":
                 case "Microsoft.Data.SqlClient.WriteTransactionCommitAfter":
                     {
                         PrometheusCounters.DbTransactionsCommitedCount.Inc();
                     }
                     break;
-                case "System.Data.SqlClient.WriteTransactionCommitError":
                 case "Microsoft.Data.SqlClient.WriteTransactionCommitError":
                     {
-                        PrometheusCounters.SqlCommandsErrors.Inc();
+                        PrometheusCounters.SqlCommandsErrors.WithLabels("transaction").Inc();
                     }
                     break;
             }
@@ -175,21 +170,18 @@ namespace Prometheus.Contrib.Diagnostics
         {
             switch (name)
             {
-                case "System.Data.SqlClient.WriteTransactionRollbackBefore":
                 case "Microsoft.Data.SqlClient.WriteTransactionRollbackBefore":
                     {
                     }
                     break;
-                case "System.Data.SqlClient.WriteTransactionRollbackAfter":
                 case "Microsoft.Data.SqlClient.WriteTransactionRollbackAfter":
                     {
                         PrometheusCounters.DbTransactionsRollbackCount.Inc();
                     }
                     break;
-                case "System.Data.SqlClient.WriteTransactionRollbackError":
                 case "Microsoft.Data.SqlClient.WriteTransactionRollbackError":
                     {
-                        PrometheusCounters.SqlCommandsErrors.Inc();
+                        PrometheusCounters.SqlCommandsErrors.WithLabels("transaction").Inc();
                     }
                     break;
             }
