@@ -14,10 +14,10 @@ namespace Prometheus.Contrib.EventListeners.Adapters
 
         private static class AspNetCorePrometheusCounters
         {
-            public static Gauge AspNetCoreRequestsPerSecond = Metrics.CreateGauge("aspnetcore_counters_requests_per_second", "Request Rate");
-            public static Gauge AspNetCoreTotalRequests = Metrics.CreateGauge("aspnetcore_counters_total_requests", "Total Requests");
-            public static Gauge AspNetCoreCurrentRequests = Metrics.CreateGauge("aspnetcore_counters_current_requests", "Current Requests");
-            public static Gauge AspNetCoreFailedRequests = Metrics.CreateGauge("aspnetcore_counters_failed_requests", "Failed Requests");
+            public static Gauge AspNetCoreRequestsPerSecond = Metrics.CreateGauge("aspnetcore_requests_per_second", "Request Rate");
+            public static Gauge AspNetCoreTotalRequests = Metrics.CreateGauge("aspnetcore_requests_total", "Total Requests");
+            public static Gauge AspNetCoreCurrentRequests = Metrics.CreateGauge("aspnetcore_requests_current_total", "Current Requests");
+            public static Gauge AspNetCoreFailedRequests = Metrics.CreateGauge("aspnetcore_requests_failed_total", "Failed Requests");
         }
 
         public void OnCounterEvent(string name, double value)
