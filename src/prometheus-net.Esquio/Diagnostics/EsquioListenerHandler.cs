@@ -10,22 +10,22 @@ namespace Prometheus.Esquio.Diagnostics
         private static class PrometheusCounters
         {
             public static readonly Counter FeatureEvaluation = Metrics.CreateCounter(
-                "esquio_feature_evaluation_count",
+                "esquio_feature_evaluation_total",
                 "Feature evaluation count",
                 new CounterConfiguration { LabelNames = new[] { "product", "feature", "enabled" } });
 
             public static readonly Counter FeatureEvaluationThrows = Metrics.CreateCounter(
-                "esquio_feature_evaluation_throws_count",
+                "esquio_feature_evaluation_throws_total",
                 "Feature evaluation throws count",
                 new CounterConfiguration { LabelNames = new[] { "product", "feature" } });
 
             public static readonly Counter FeatureEvaluationNotFound = Metrics.CreateCounter(
-                "esquio_feature_evaluation_notfound_count",
+                "esquio_feature_evaluation_notfound_total",
                 "Feature evaluation not found count",
                 new CounterConfiguration { LabelNames = new[] { "product", "feature" } });
 
             public static readonly Counter ToggleEvaluation = Metrics.CreateCounter(
-                "esquio_toggle_evaluation_count",
+                "esquio_toggle_evaluation_total",
                 "Toggle evaluation count",
                 new CounterConfiguration { LabelNames = new[] { "product", "feature", "type" } });
         }

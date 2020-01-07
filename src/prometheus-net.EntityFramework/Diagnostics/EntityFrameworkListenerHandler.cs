@@ -22,6 +22,7 @@ namespace Prometheus.EntityFramework.Diagnostics
             public static readonly Counter EfCoreConnectionsCloseTotal = Metrics.CreateCounter("efcore_connection_closed_total", "Total closed DB connections");
             public static readonly Counter EfCoreConnectionsErrors = Metrics.CreateCounter("efcore_connection_errors_total", "Total DB connections errors");
 
+            public static readonly Counter EfCoreTransactionsStarted = Metrics.CreateCounter("efcore_transaction_started_total", "Total started transactions.");
             public static readonly Counter EfCoreTransactionsCommitedCount = Metrics.CreateCounter("efcore_transaction_committed_total", "Total committed transactions.");
             public static readonly Counter EfCoreTransactionsRollbackCount = Metrics.CreateCounter("efcore_transaction_rollback_total", "Total rollback transactions.");
 

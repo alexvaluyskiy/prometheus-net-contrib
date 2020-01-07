@@ -18,8 +18,8 @@ namespace Prometheus.Contrib.Diagnostics
                 });
 
             public static readonly Counter GrpcClientRequestsErrors = Metrics.CreateCounter(
-                "grpc_client_requests_errors",
-                "Total HTTP requests sent errors.");
+                "grpc_client_requests_errors_total",
+                "Total GRPC requests sent errors.");
         }
 
         private readonly PropertyFetcher stopResponseFetcher = new PropertyFetcher("Response");

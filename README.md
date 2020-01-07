@@ -102,22 +102,22 @@ public class Startup
 
 | Name | Type | Description |
 |--|--|--|
-| aspnetcore_request_duration_seconds | Histogram  |  The duration of HTTP requests processed by an ASP.NET Core application  |
-| aspnetcore_request_errors  | Counter  | Total HTTP requests received errors  |
+| aspnetcore_requests_duration_seconds | Histogram  |  The duration of HTTP requests processed by an ASP.NET Core application  |
+| aspnetcore_requests_errors_total  | Counter  | Total HTTP requests received errors  |
 
 ### HTTP Client
 
 | Name | Type | Description |
 |--|--|--|
-| httpclient_requests_duration_seconds | Histogram  | Time between first byte of request headers sent to last byte of response received |
-| httpclient_requests_errors  | Counter  | Total HTTP requests sent errors  |
+| http_client_requests_duration_seconds | Histogram  | Time between first byte of request headers sent to last byte of response received |
+| http_client_requests_errors_total  | Counter  | Total HTTP requests sent errors  |
 
 ### SQL Client
 
 | Name | Type | Description |
 |--|--|--|
 | sqlclient_commands_duration_seconds | Histogram  | The duration of DB requests processed by an application |
-| sqlclient_commands_errors  | Counter  | Total DB requests errors  |
+| sqlclient_commands_errors_total  | Counter  | Total DB requests errors  |
 | sqlclient_connections_total | Counter  | Total DB connections |
 | sqlclient_connections_errors  | Counter  | Total DB connections errors  |
 | sqlclient_transactions_committed_total | Counter  | Total committed transactions |
@@ -140,6 +140,12 @@ public class Startup
 | sqlclient_sum_result_sets  | Gauge  | Returns the number of result sets  |
 | sqlclient_transacions  | Gauge  | Returns the number of user transactions  |
 | sqlclient_unprepared_exec  | Gauge  | Returns the number of unprepared statements executed through the connection  |
+
+### GRPC Client
+| Name | Type | Description |
+|--|--|--|
+| grpc_client_requests_duration_seconds | Histogram  | Time between first byte of request headers sent to last byte of response received |
+| grpc_client_requests_errors_total  | Counter  | Total GRPC requests sent errors  |
 
 ### Identity Server
 | Name | Type | Description |

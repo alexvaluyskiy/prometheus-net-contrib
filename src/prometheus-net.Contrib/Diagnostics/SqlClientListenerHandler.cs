@@ -14,11 +14,11 @@ namespace Prometheus.Contrib.Diagnostics
         private static class PrometheusCounters
         {
             public static readonly Histogram SqlCommandsDuration = Metrics.CreateHistogram(
-                "sqlclient_command_duration_seconds",
+                "sqlclient_commands_duration_seconds",
                 "The duration of DB requests processed by an application.",
                 new HistogramConfiguration { Buckets = Histogram.ExponentialBuckets(0.001, 2, 16) });
             public static readonly Counter SqlCommandsErrors = Metrics.CreateCounter(
-                "sqlclient_command_errors_total", 
+                "sqlclient_commands_errors_total", 
                 "Total DB requests errors",
                 new CounterConfiguration { LabelNames = new[] { "type" } });
 

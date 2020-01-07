@@ -9,7 +9,7 @@ namespace Prometheus.Contrib.Diagnostics
         private static class PrometheusCounters
         {
             public static readonly Histogram HttpClientRequestsDuration = Metrics.CreateHistogram(
-                "httpclient_requests_duration_seconds",
+                "http_client_requests_duration_seconds",
                 "Time between first byte of request headers sent to last byte of response received.",
                 new HistogramConfiguration
                 {
@@ -18,7 +18,7 @@ namespace Prometheus.Contrib.Diagnostics
                 });
 
             public static readonly Counter HttpClientRequestsErrors = Metrics.CreateCounter(
-                "httpclient_requests_errors",
+                "http_client_requests_errors_total",
                 "Total HTTP requests sent errors.");
         }
 
