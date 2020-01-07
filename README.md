@@ -140,3 +140,14 @@ public class Startup
 | sqlclient_sum_result_sets  | Gauge  | Returns the number of result sets  |
 | sqlclient_transacions  | Gauge  | Returns the number of user transactions  |
 | sqlclient_unprepared_exec  | Gauge  | Returns the number of unprepared statements executed through the connection  |
+
+### Identity Server
+| Name | Type | Description |
+|--|--|--|
+| idsrv_client_authentication_success_total | Counter | Gets raised for successful client authentication at the token endpoint |
+| idsrv_client_authentication_failure_total  | Counter  | Gets raised for failed client authentication at the token endpoint  |
+| idsrv_token_issued_success_total | Counter  | Gets raised for successful attempts to request access tokens |
+| idsrv_token_issued_failure_total  | Counter  | Gets raised for failed attempts to request access tokens  |
+| idsrv_user_login_success_total | Counter  | Gets raised by the UI for successful user logins |
+| idsrv_user_login_failure_total | Counter  | Gets raised by the UI for failed user logins |
+| idsrv_unhandled_exceptions_total | Counter  | Gets raised for unhandled exceptions |
