@@ -41,7 +41,7 @@ public class Startup
 ### Runtime
 | Name | Type | Description |
 |--|--|--|
-| runtime_cpu_usage | Gauge  | CPU usage in percents  |
+| runtime_cpu_usage_ratio | Gauge  | CPU usage in percents  |
 | runtime_memory_working_set_megabytes | Gauge  | Working Set in megabytes  |
 | runtime_gc_heap_size_megabytes | Gauge  | GC Heap Size in megabytes  |
 | runtime_gc_count | Gauge  | GC Count  |

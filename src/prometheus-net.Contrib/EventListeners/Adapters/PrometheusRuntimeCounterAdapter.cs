@@ -28,7 +28,7 @@ namespace Prometheus.Contrib.EventListeners.Adapters
 
         private static class PrometheusCounters
         {
-            public static Gauge RuntimeCpuUsage = Metrics.CreateGauge("runtime_cpu_usage", "CPU usage in percents");
+            public static Gauge RuntimeCpuUsage = Metrics.CreateGauge("runtime_cpu_usage_ratio", "CPU usage in percents");
             public static Gauge RuntimeWorkingSet = Metrics.CreateGauge("runtime_memory_working_set_megabytes", "Working Set in megabytes");
             public static Gauge RuntimeGcHeapSize = Metrics.CreateGauge("runtime_gc_heap_size_megabytes", "GC Heap Size in megabytes");
             public static Gauge RuntimeGcCount = Metrics.CreateGauge("runtime_gc_count", "GC Count", new GaugeConfiguration { LabelNames = new[] { "gen" } });
