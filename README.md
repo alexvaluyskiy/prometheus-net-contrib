@@ -42,60 +42,60 @@ public class Startup
 | Name | Type | Description |
 |--|--|--|
 | runtime_counters_cpu_usage | Gauge  | CPU usage in percents  |
-| runtime_counters_memory_working_set | Gauge  | Working Set in megabytes  |
-| runtime_counters_gc_heap_size | Gauge  | GC Heap Size in megabytes  |
+| runtime_memory_working_set_megabytes | Gauge  | Working Set in megabytes  |
+| runtime_gc_heap_size_megabytes | Gauge  | GC Heap Size in megabytes  |
 | runtime_counters_gc_count | Gauge  | GC Count  |
-| runtime_counters_exception_count | Gauge  | Exception Count  |
-| runtime_counters_threadpool_thread_count | Gauge  | ThreadPool Thread Count  |
+| runtime_exceptions_total | Gauge  | Exception Count  |
+| runtime_threadpool_threads_total | Gauge  | ThreadPool Thread Count  |
 | runtime_counters_threadpool_queue_length | Gauge  | Monitor Lock Contention Count  |
-| runtime_counters_threadpool_completed_items_count | Gauge  | ThreadPool Queue Length  |
+| runtime_threadpool_completed_items_total | Gauge  | ThreadPool Queue Length  |
 | runtime_counters_time_in_gc | Gauge  | ThreadPool Completed Work Item Count  |
-| runtime_counters_gc_size | Gauge  | GC size in bytes  |
-| runtime_counters_alloc_rate | Gauge  | Allocation Rate in bytes  |
-| runtime_counters_assembly_count | Gauge  | Number of Assemblies Loaded  |
-| runtime_counters_active_timer_count | Gauge  | Number of Active Timers  |
+| runtime_gc_size_bytes | Gauge  | GC size in bytes  |
+| runtime_allocation_rate_bytes | Gauge  | Allocation Rate in bytes  |
+| runtime_assemblies_total | Gauge  | Number of Assemblies Loaded  |
+| runtime_active_timers_total | Gauge  | Number of Active Timers  |
 
 ### ASP .NET Core
 
 | Name | Type | Description |
 |--|--|--|
 | aspnetcore_counters_requests_per_second | Gauge  | Request Rate  |
-| aspnetcore_counters_total_requests | Gauge  | Total Requests  |
-| aspnetcore_counters_current_requests | Gauge  | Current Requests  |
-| aspnetcore_counters_failed_requests | Gauge  | Failed Requests  |
+| aspnetcore_requests_total | Gauge  | Total Requests  |
+| aspnetcore_requests_current_total | Gauge  | Current Requests  |
+| aspnetcore_requests_failed_total | Gauge  | Failed Requests  |
 
 ### ASP .NET Core SignalR
 
 | Name | Type | Description |
 |--|--|--|
-| signalr_counters_connections_started  | Gauge  | Total Connections Started  |
-| signalr_counters_connections_stopped | Gauge  | Total Connections Stopped  |
-| signalr_counters_connections_timed_out | Gauge  | Total Connections Timed Out  |
-| signalr_counters_current_connections | Gauge  | Current Connections  |
-| signalr_counters_connections_duration | Gauge  | Average Connection Duration |
+| signalr_connections_started_total  | Gauge  | Total Connections Started  |
+| signalr_connections_stopped_total | Gauge  | Total Connections Stopped  |
+| signalr_connections_timed_out_total | Gauge  | Total Connections Timed Out  |
+| signalr_connections_current_total | Gauge  | Current Connections  |
+| signalr_connections_duration_seconds | Gauge  | Average Connection Duration |
 
 ### ASP .NET Core GRPC Server
 
 | Name | Type | Description |
 |--|--|--|
-| grpc_server_counters_total_calls  | Gauge  | Total Calls  |
-| grpc_server_counters_current_calls | Gauge  | Current Calls  |
-| grpc_server_counters_calls_failed | Gauge  | Total Calls Failed  |
-| grpc_server_counters_calls_deadline_exceeded | Gauge  | Total Calls Deadline Exceeded |
-| grpc_server_counters_messages_sent | Gauge  | Total Messages Sent |
-| grpc_server_counters_messages_received | Gauge  | Total Messages Received |
-| grpc_server_counters_calls_unimplemented | Gauge  | Total Calls Unimplemented |
+| grpc_server_calls_total  | Gauge  | Total Calls  |
+| grpc_server_calls_current_total | Gauge  | Current Calls  |
+| grpc_server_calls_failed_total | Gauge  | Total Calls Failed  |
+| grpc_server_deadline_exceeded_total | Gauge  | Total Calls Deadline Exceeded |
+| grpc_server_messages_sent_total | Gauge  | Total Messages Sent |
+| grpc_server_messages_received_total | Gauge  | Total Messages Received |
+| grpc_server_calls_unimplemented_total | Gauge  | Total Calls Unimplemented |
 
 ### ASP .NET Core GRPC Client
 
 | Name | Type | Description |
 |--|--|--|
-| grpc_client_counters_total_calls  | Gauge  | Total Calls  |
-| grpc_client_counters_current_calls | Gauge  | Current Calls  |
-| grpc_client_counters_calls_failed | Gauge  | Total Calls Failed  |
-| grpc_client_counters_calls_deadline_exceeded | Gauge  | Total Calls Deadline Exceeded |
-| grpc_client_counters_messages_sent | Gauge  | Total Messages Sent |
-| grpc_client_counters_messages_received | Gauge  | Total Messages Received |
+| grpc_client_calls_total  | Gauge  | Total Calls  |
+| grpc_client_calls_current_total | Gauge  | Current Calls  |
+| grpc_client_calls_failed_total | Gauge  | Total Calls Failed  |
+| grpc_client_calls_deadline_exceeded_total | Gauge  | Total Calls Deadline Exceeded |
+| grpc_client_messages_sent_total | Gauge  | Total Messages Sent |
+| grpc_client_messages_received_total | Gauge  | Total Messages Received |
 
 ## .NET Core Diagnostic Listeners
 ### ASP .NET Core
