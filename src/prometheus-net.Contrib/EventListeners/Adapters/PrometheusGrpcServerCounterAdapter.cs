@@ -17,13 +17,13 @@ namespace Prometheus.Contrib.EventListeners.Adapters
 
         private static class GrpcServerPrometheusCounters
         {
-            public static Gauge GrpcServerTotalCalls = Metrics.CreateGauge("grpc_server_counters_total_calls", "Total Calls");
-            public static Gauge GrpcServerCurrentCalls = Metrics.CreateGauge("grpc_server_counters_current_calls", "Current Calls");
-            public static Gauge GrpcServerCallsFailed = Metrics.CreateGauge("grpc_server_counters_calls_failed", "Total Calls Failed");
-            public static Gauge GrpcServerCallsDeadlineExceeded = Metrics.CreateGauge("grpc_server_counters_calls_deadline_exceeded", "Total Calls Deadline Exceeded");
-            public static Gauge GrpcServerMessagesSent = Metrics.CreateGauge("grpc_server_counters_messages_sent", "Total Messages Sent");
-            public static Gauge GrpcServerMessagesReceived = Metrics.CreateGauge("grpc_server_counters_messages_received", "Total Messages Received");
-            public static Gauge GrpcServerCallsUnimplemented = Metrics.CreateGauge("grpc_server_counters_calls_unimplemented", "Total Calls Unimplemented");
+            public static Gauge GrpcServerTotalCalls = Metrics.CreateGauge("grpc_server_calls_total", "Total Calls");
+            public static Gauge GrpcServerCurrentCalls = Metrics.CreateGauge("grpc_server_calls_current_total", "Current Calls");
+            public static Gauge GrpcServerCallsFailed = Metrics.CreateGauge("grpc_server_calls_failed_total", "Total Calls Failed");
+            public static Gauge GrpcServerCallsDeadlineExceeded = Metrics.CreateGauge("grpc_server_deadline_exceeded_total", "Total Calls Deadline Exceeded");
+            public static Gauge GrpcServerMessagesSent = Metrics.CreateGauge("grpc_server_messages_sent_total", "Total Messages Sent");
+            public static Gauge GrpcServerMessagesReceived = Metrics.CreateGauge("grpc_server_messages_received_total", "Total Messages Received");
+            public static Gauge GrpcServerCallsUnimplemented = Metrics.CreateGauge("grpc_server_calls_unimplemented_total", "Total Calls Unimplemented");
         }
 
         public void OnCounterEvent(string name, double value)
