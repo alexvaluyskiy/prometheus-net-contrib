@@ -24,15 +24,6 @@ public class Startup
         services.AddPrometheusHttpClientMetrics();
         services.AddPrometheusSqlClientMetrics();
     }
-
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        app.UseEndpoints(endpoints =>
-        {
-            ...
-            endpoints.MapMetrics();
-        });
-    }
 }
 ```
 
