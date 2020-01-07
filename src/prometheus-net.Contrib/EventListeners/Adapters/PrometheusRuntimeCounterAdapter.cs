@@ -29,18 +29,18 @@ namespace Prometheus.Contrib.EventListeners.Adapters
         private static class PrometheusCounters
         {
             public static Gauge RuntimeCpuUsage = Metrics.CreateGauge("runtime_counters_cpu_usage", "CPU usage in percents");
-            public static Gauge RuntimeWorkingSet = Metrics.CreateGauge("runtime_counters_memory_working_set", "Working Set in megabytes");
-            public static Gauge RuntimeGcHeapSize = Metrics.CreateGauge("runtime_counters_gc_heap_size", "GC Heap Size in megabytes");
+            public static Gauge RuntimeWorkingSet = Metrics.CreateGauge("runtime_memory_working_set_megabytes", "Working Set in megabytes");
+            public static Gauge RuntimeGcHeapSize = Metrics.CreateGauge("runtime_gc_heap_size_megabytes", "GC Heap Size in megabytes");
             public static Gauge RuntimeGcCount = Metrics.CreateGauge("runtime_counters_gc_count", "GC Count", new GaugeConfiguration { LabelNames = new[] { "gen" } });
-            public static Gauge RuntimeExceptionCount = Metrics.CreateGauge("runtime_counters_exception_count", "Exception Count");
-            public static Gauge RuntimeThreadPoolThreadCount = Metrics.CreateGauge("runtime_counters_threadpool_thread_count", "ThreadPool Thread Count");
+            public static Gauge RuntimeExceptionCount = Metrics.CreateGauge("runtime_exceptions_total", "Exception Count");
+            public static Gauge RuntimeThreadPoolThreadCount = Metrics.CreateGauge("runtime_threadpool_threads_total", "ThreadPool Thread Count");
             public static Gauge RuntimeThreadPoolQueueLength = Metrics.CreateGauge("runtime_counters_threadpool_queue_length", "Monitor Lock Contention Count");
-            public static Gauge RuntimeThreadPoolCompletedItemsCount = Metrics.CreateGauge("runtime_counters_threadpool_completed_items_count", "ThreadPool Queue Length");
+            public static Gauge RuntimeThreadPoolCompletedItemsCount = Metrics.CreateGauge("runtime_threadpool_completed_items_total", "ThreadPool Queue Length");
             public static Gauge RuntimeTimeInGc = Metrics.CreateGauge("runtime_counters_time_in_gc", "ThreadPool Completed Work Item Count");
-            public static Gauge RuntimeGcSize = Metrics.CreateGauge("runtime_counters_gc_size", "GC size in bytes", new GaugeConfiguration { LabelNames = new[] { "gen" } });
-            public static Gauge RuntimeAllocRate = Metrics.CreateGauge("runtime_counters_alloc_rate", "Allocation Rate in bytes");
-            public static Gauge RuntimeAssemblyCount = Metrics.CreateGauge("runtime_counters_assembly_count", "Number of Assemblies Loaded");
-            public static Gauge RuntimeActiveTimerCount = Metrics.CreateGauge("runtime_counters_active_timer_count", "Number of Active Timers");
+            public static Gauge RuntimeGcSize = Metrics.CreateGauge("runtime_gc_size_bytes", "GC size in bytes", new GaugeConfiguration { LabelNames = new[] { "gen" } });
+            public static Gauge RuntimeAllocRate = Metrics.CreateGauge("runtime_allocation_rate_bytes", "Allocation Rate in bytes");
+            public static Gauge RuntimeAssemblyCount = Metrics.CreateGauge("runtime_assemblies_total", "Number of Assemblies Loaded");
+            public static Gauge RuntimeActiveTimerCount = Metrics.CreateGauge("runtime_active_timers_total", "Number of Active Timers");
         }
 
         public void OnCounterEvent(string name, double value)
