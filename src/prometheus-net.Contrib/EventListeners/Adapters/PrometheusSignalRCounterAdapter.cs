@@ -15,11 +15,11 @@ namespace Prometheus.Contrib.EventListeners.Adapters
 
         private static class SignalrPrometheusCounters
         {
-            public static Gauge SignalrConnectionsStarted = Metrics.CreateGauge("signalr_counters_connections_started", "Total Connections Started");
-            public static Gauge SignalrConnectionsStopped = Metrics.CreateGauge("signalr_counters_connections_stopped", "Total Connections Stopped");
-            public static Gauge SignalrConnectionsTimedOut = Metrics.CreateGauge("signalr_counters_connections_timed_out", "Total Connections Timed Out");
-            public static Gauge SignalrCurrentConnections = Metrics.CreateGauge("signalr_counters_current_connections", "Current Connections");
-            public static Gauge SignalrConnectionsDuration = Metrics.CreateGauge("signalr_counters_connections_duration", "Average Connection Duration");
+            public static Gauge SignalrConnectionsStarted = Metrics.CreateGauge("signalr_connections_started_total", "Total Connections Started");
+            public static Gauge SignalrConnectionsStopped = Metrics.CreateGauge("signalr_connections_stopped_total", "Total Connections Stopped");
+            public static Gauge SignalrConnectionsTimedOut = Metrics.CreateGauge("signalr_connections_timed_out_total", "Total Connections Timed Out");
+            public static Gauge SignalrCurrentConnections = Metrics.CreateGauge("signalr_connections_current_total", "Current Connections");
+            public static Gauge SignalrConnectionsDuration = Metrics.CreateGauge("signalr_connections_duration_seconds", "Average Connection Duration");
         }
 
         public void OnCounterEvent(string name, double value)

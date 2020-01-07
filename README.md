@@ -32,83 +32,83 @@ public class Startup
 ### Runtime
 | Name | Type | Description |
 |--|--|--|
-| runtime_counters_cpu_usage | Gauge  | CPU usage in percents  |
-| runtime_counters_memory_working_set | Gauge  | Working Set in megabytes  |
-| runtime_counters_gc_heap_size | Gauge  | GC Heap Size in megabytes  |
-| runtime_counters_gc_count | Gauge  | GC Count  |
-| runtime_counters_exception_count | Gauge  | Exception Count  |
-| runtime_counters_threadpool_thread_count | Gauge  | ThreadPool Thread Count  |
-| runtime_counters_threadpool_queue_length | Gauge  | Monitor Lock Contention Count  |
-| runtime_counters_threadpool_completed_items_count | Gauge  | ThreadPool Queue Length  |
-| runtime_counters_time_in_gc | Gauge  | ThreadPool Completed Work Item Count  |
-| runtime_counters_gc_size | Gauge  | GC size in bytes  |
-| runtime_counters_alloc_rate | Gauge  | Allocation Rate in bytes  |
-| runtime_counters_assembly_count | Gauge  | Number of Assemblies Loaded  |
-| runtime_counters_active_timer_count | Gauge  | Number of Active Timers  |
+| runtime_cpu_usage_ratio | Gauge  | CPU usage in percents  |
+| runtime_memory_working_set_megabytes | Gauge  | Working Set in megabytes  |
+| runtime_gc_heap_size_megabytes | Gauge  | GC Heap Size in megabytes  |
+| runtime_gc_count | Gauge  | GC Count  |
+| runtime_exceptions_total | Gauge  | Exception Count  |
+| runtime_threadpool_threads_total | Gauge  | ThreadPool Thread Count  |
+| runtime_threadpool_queue_length | Gauge  | Monitor Lock Contention Count  |
+| runtime_threadpool_completed_items_total | Gauge  | ThreadPool Queue Length  |
+| runtime_time_in_gc | Gauge  | ThreadPool Completed Work Item Count  |
+| runtime_gc_size_bytes | Gauge  | GC size in bytes  |
+| runtime_allocation_rate_bytes | Gauge  | Allocation Rate in bytes  |
+| runtime_assemblies_total | Gauge  | Number of Assemblies Loaded  |
+| runtime_active_timers_total | Gauge  | Number of Active Timers  |
 
 ### ASP .NET Core
 
 | Name | Type | Description |
 |--|--|--|
-| aspnetcore_counters_requests_per_second | Gauge  | Request Rate  |
-| aspnetcore_counters_total_requests | Gauge  | Total Requests  |
-| aspnetcore_counters_current_requests | Gauge  | Current Requests  |
-| aspnetcore_counters_failed_requests | Gauge  | Failed Requests  |
+| aspnetcore_requests_per_second | Gauge  | Request Rate  |
+| aspnetcore_requests_total | Gauge  | Total Requests  |
+| aspnetcore_requests_current_total | Gauge  | Current Requests  |
+| aspnetcore_requests_failed_total | Gauge  | Failed Requests  |
 
 ### ASP .NET Core SignalR
 
 | Name | Type | Description |
 |--|--|--|
-| signalr_counters_connections_started  | Gauge  | Total Connections Started  |
-| signalr_counters_connections_stopped | Gauge  | Total Connections Stopped  |
-| signalr_counters_connections_timed_out | Gauge  | Total Connections Timed Out  |
-| signalr_counters_current_connections | Gauge  | Current Connections  |
-| signalr_counters_connections_duration | Gauge  | Average Connection Duration |
+| signalr_connections_started_total  | Gauge  | Total Connections Started  |
+| signalr_connections_stopped_total | Gauge  | Total Connections Stopped  |
+| signalr_connections_timed_out_total | Gauge  | Total Connections Timed Out  |
+| signalr_connections_current_total | Gauge  | Current Connections  |
+| signalr_connections_duration_seconds | Gauge  | Average Connection Duration |
 
 ### ASP .NET Core GRPC Server
 
 | Name | Type | Description |
 |--|--|--|
-| grpc_server_counters_total_calls  | Gauge  | Total Calls  |
-| grpc_server_counters_current_calls | Gauge  | Current Calls  |
-| grpc_server_counters_calls_failed | Gauge  | Total Calls Failed  |
-| grpc_server_counters_calls_deadline_exceeded | Gauge  | Total Calls Deadline Exceeded |
-| grpc_server_counters_messages_sent | Gauge  | Total Messages Sent |
-| grpc_server_counters_messages_received | Gauge  | Total Messages Received |
-| grpc_server_counters_calls_unimplemented | Gauge  | Total Calls Unimplemented |
+| grpc_server_calls_total  | Gauge  | Total Calls  |
+| grpc_server_calls_current_total | Gauge  | Current Calls  |
+| grpc_server_calls_failed_total | Gauge  | Total Calls Failed  |
+| grpc_server_deadline_exceeded_total | Gauge  | Total Calls Deadline Exceeded |
+| grpc_server_messages_sent_total | Gauge  | Total Messages Sent |
+| grpc_server_messages_received_total | Gauge  | Total Messages Received |
+| grpc_server_calls_unimplemented_total | Gauge  | Total Calls Unimplemented |
 
 ### ASP .NET Core GRPC Client
 
 | Name | Type | Description |
 |--|--|--|
-| grpc_client_counters_total_calls  | Gauge  | Total Calls  |
-| grpc_client_counters_current_calls | Gauge  | Current Calls  |
-| grpc_client_counters_calls_failed | Gauge  | Total Calls Failed  |
-| grpc_client_counters_calls_deadline_exceeded | Gauge  | Total Calls Deadline Exceeded |
-| grpc_client_counters_messages_sent | Gauge  | Total Messages Sent |
-| grpc_client_counters_messages_received | Gauge  | Total Messages Received |
+| grpc_client_calls_total  | Gauge  | Total Calls  |
+| grpc_client_calls_current_total | Gauge  | Current Calls  |
+| grpc_client_calls_failed_total | Gauge  | Total Calls Failed  |
+| grpc_client_calls_deadline_exceeded_total | Gauge  | Total Calls Deadline Exceeded |
+| grpc_client_messages_sent_total | Gauge  | Total Messages Sent |
+| grpc_client_messages_received_total | Gauge  | Total Messages Received |
 
 ## .NET Core Diagnostic Listeners
 ### ASP .NET Core
 
 | Name | Type | Description |
 |--|--|--|
-| aspnetcore_request_duration_seconds | Histogram  |  The duration of HTTP requests processed by an ASP.NET Core application  |
-| aspnetcore_request_errors  | Counter  | Total HTTP requests received errors  |
+| aspnetcore_requests_duration_seconds | Histogram  |  The duration of HTTP requests processed by an ASP.NET Core application  |
+| aspnetcore_requests_errors_total  | Counter  | Total HTTP requests received errors  |
 
 ### HTTP Client
 
 | Name | Type | Description |
 |--|--|--|
-| httpclient_requests_duration_seconds | Histogram  | Time between first byte of request headers sent to last byte of response received |
-| httpclient_requests_errors  | Counter  | Total HTTP requests sent errors  |
+| http_client_requests_duration_seconds | Histogram  | Time between first byte of request headers sent to last byte of response received |
+| http_client_requests_errors_total  | Counter  | Total HTTP requests sent errors  |
 
 ### SQL Client
 
 | Name | Type | Description |
 |--|--|--|
 | sqlclient_commands_duration_seconds | Histogram  | The duration of DB requests processed by an application |
-| sqlclient_commands_errors  | Counter  | Total DB requests errors  |
+| sqlclient_commands_errors_total  | Counter  | Total DB requests errors  |
 | sqlclient_connections_total | Counter  | Total DB connections |
 | sqlclient_connections_errors  | Counter  | Total DB connections errors  |
 | sqlclient_transactions_committed_total | Counter  | Total committed transactions |
@@ -131,3 +131,20 @@ public class Startup
 | sqlclient_sum_result_sets  | Gauge  | Returns the number of result sets  |
 | sqlclient_transacions  | Gauge  | Returns the number of user transactions  |
 | sqlclient_unprepared_exec  | Gauge  | Returns the number of unprepared statements executed through the connection  |
+
+### GRPC Client
+| Name | Type | Description |
+|--|--|--|
+| grpc_client_requests_duration_seconds | Histogram  | Time between first byte of request headers sent to last byte of response received |
+| grpc_client_requests_errors_total  | Counter  | Total GRPC requests sent errors  |
+
+### Identity Server
+| Name | Type | Description |
+|--|--|--|
+| idsrv_client_authentication_success_total | Counter | Gets raised for successful client authentication at the token endpoint |
+| idsrv_client_authentication_failure_total  | Counter  | Gets raised for failed client authentication at the token endpoint  |
+| idsrv_token_issued_success_total | Counter  | Gets raised for successful attempts to request access tokens |
+| idsrv_token_issued_failure_total  | Counter  | Gets raised for failed attempts to request access tokens  |
+| idsrv_user_login_success_total | Counter  | Gets raised by the UI for successful user logins |
+| idsrv_user_login_failure_total | Counter  | Gets raised by the UI for failed user logins |
+| idsrv_unhandled_exceptions_total | Counter  | Gets raised for unhandled exceptions |
