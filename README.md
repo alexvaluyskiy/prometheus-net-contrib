@@ -41,15 +41,15 @@ public class Startup
 ### Runtime
 | Name | Type | Description |
 |--|--|--|
-| runtime_counters_cpu_usage | Gauge  | CPU usage in percents  |
+| runtime_cpu_usage | Gauge  | CPU usage in percents  |
 | runtime_memory_working_set_megabytes | Gauge  | Working Set in megabytes  |
 | runtime_gc_heap_size_megabytes | Gauge  | GC Heap Size in megabytes  |
-| runtime_counters_gc_count | Gauge  | GC Count  |
+| runtime_gc_count | Gauge  | GC Count  |
 | runtime_exceptions_total | Gauge  | Exception Count  |
 | runtime_threadpool_threads_total | Gauge  | ThreadPool Thread Count  |
-| runtime_counters_threadpool_queue_length | Gauge  | Monitor Lock Contention Count  |
+| runtime_threadpool_queue_length | Gauge  | Monitor Lock Contention Count  |
 | runtime_threadpool_completed_items_total | Gauge  | ThreadPool Queue Length  |
-| runtime_counters_time_in_gc | Gauge  | ThreadPool Completed Work Item Count  |
+| runtime_time_in_gc | Gauge  | ThreadPool Completed Work Item Count  |
 | runtime_gc_size_bytes | Gauge  | GC size in bytes  |
 | runtime_allocation_rate_bytes | Gauge  | Allocation Rate in bytes  |
 | runtime_assemblies_total | Gauge  | Number of Assemblies Loaded  |
@@ -59,7 +59,7 @@ public class Startup
 
 | Name | Type | Description |
 |--|--|--|
-| aspnetcore_counters_requests_per_second | Gauge  | Request Rate  |
+| aspnetcore_requests_per_second | Gauge  | Request Rate  |
 | aspnetcore_requests_total | Gauge  | Total Requests  |
 | aspnetcore_requests_current_total | Gauge  | Current Requests  |
 | aspnetcore_requests_failed_total | Gauge  | Failed Requests  |
