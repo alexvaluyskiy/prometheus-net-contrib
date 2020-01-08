@@ -14,4 +14,4 @@ jobs:
         dotnet-version: '3.0.100'
     - run: dotnet tool restore
     - run: dotnet dotnet-gitversion /output GitHubActions /nofetch
-    - run: dotnet pack prometheus-net.Contrib.sln --include-symbols -c "Release" --output "build/"
+    - run: dotnet pack prometheus-net.Contrib.sln --include-symbols -c "Release" --output "build/" /p:Version=$GITHUB_ACTION"
