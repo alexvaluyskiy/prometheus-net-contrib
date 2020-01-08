@@ -1,0 +1,17 @@
+name: publish-nuget-packages
+
+on: 
+  release:
+    types: [published, prereleased]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.0.100'
+    - run: dotnet tool restore
+    - run: dotnet dotnet-gitversion /output GitHubActions /nofetch
+    - run: dotnet pack prometheus-net.Contrib.sln --include-symbols -c "Release" --output "build/"
