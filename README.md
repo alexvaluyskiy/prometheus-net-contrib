@@ -140,12 +140,46 @@ public class Startup
 | grpc_client_requests_errors_total  | Counter  | Total GRPC requests sent errors  |
 
 ### Identity Server
+
+```powershell
+dotnet add package prometheus-net.IdentityServer
+```
+
+And then start the collectors:
+```csharp
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddIdentityServer(options =>
+        {
+            options.Events.RaiseErrorEvents = true;
+            options.Events.RaiseFailureEvents = true;
+            options.Events.RaiseInformationEvents = true;
+            options.Events.RaiseSuccessEvents = true;
+        });
+
+        services.AddPrometheusIdentityServerMetrics();
+    }
+}
+```
+
 | Name | Type | Description |
 |--|--|--|
+| idsrv_api_authentication_failure_total | Counter | Gets raised for successful API authentication at the introspection endpoint |
+| idsrv_api_authentication_failure_total  | Counter  | Gets raised for failed API authentication at the introspection endpoint  |
 | idsrv_client_authentication_success_total | Counter | Gets raised for successful client authentication at the token endpoint |
 | idsrv_client_authentication_failure_total  | Counter  | Gets raised for failed client authentication at the token endpoint  |
 | idsrv_token_issued_success_total | Counter  | Gets raised for successful attempts to request access tokens |
 | idsrv_token_issued_failure_total  | Counter  | Gets raised for failed attempts to request access tokens  |
+| idsrv_token_introspection_success_total | Counter  | Gets raised for successful attempts to request identity tokens, access tokens, refresh tokens and authorization codes |
+| idsrv_token_introspection_failure_total | Counter  | Gets raised for failed attempts to request identity tokens, access tokens, refresh tokens and authorization codes |
+| idsrv_token_revoked_success_total | Counter  | Gets raised for successful token revocation requests. |
 | idsrv_user_login_success_total | Counter  | Gets raised by the UI for successful user logins |
 | idsrv_user_login_failure_total | Counter  | Gets raised by the UI for failed user logins |
+| idsrv_user_logout_success_total | Counter  | Gets raised for successful logout requests |
+| idsrv_consent_granted_total | Counter  | Gets raised in the consent UI |
+| idsrv_consent_denied_total | Counter  | Gets raised in the consent UI |
 | idsrv_unhandled_exceptions_total | Counter  | Gets raised for unhandled exceptions |
+| idsrv_device_authorization_success_total | Counter  | Gets raised for successful device authorization requests |
+| idsrv_device_authorization_success_total | Counter  | Gets raised for failed device authorization requests |
