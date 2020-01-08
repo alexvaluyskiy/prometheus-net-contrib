@@ -12,6 +12,5 @@ jobs:
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.0.100'
-    - run: dotnet tool restore
-    - run: dotnet dotnet-gitversion /output GitHubActions /nofetch
-    - run: dotnet pack prometheus-net.Contrib.sln --include-symbols -c "Release" --output "build/" /p:Version=$GITHUB_ACTION"
+    - run: dotnet pack prometheus-net.Contrib.sln --include-symbols -c "Release" --output "build/"
+    - run: dotnet nuget push "build/*.symbols.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s "https://api.nuget.org/v3/index.json" -n true
