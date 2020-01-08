@@ -1,8 +1,8 @@
 # prometheus-net-contrib
 
-[![Build status](https://dev.azure.com/alexvaluiskyi/metrics/_apis/build/status/alexvaluyskiy.prometheus-net-contrib)](https://dev.azure.com/alexvaluiskyi/metrics/_build/latest?definitionId=13) [![Nuget](https://img.shields.io/nuget/v/prometheus-net.Contrib.svg)](https://www.nuget.org/packages/prometheus-net.Contrib/)
+![Build status](https://github.com/alexvaluyskiy/prometheus-net-contrib/workflows/run-tests/badge.svg) [![Nuget](https://img.shields.io/nuget/v/prometheus-net.Contrib.svg)](https://www.nuget.org/packages/prometheus-net.Contrib/)
 
-A plugin for the prometheus-net package, exposing event counters and diagnostic listeners for .NET Core Runtime, ASP.NET Core, SignalR, GRPC, etc.
+A plugin for the [prometheus-net](https://github.com/prometheus-net/prometheus-net) package, exposing event counters and diagnostic listeners for .NET Core Runtime, ASP.NET Core, SignalR, GRPC, etc.
 
 ## Installation
 Supports .NET core v3.0+ only.
