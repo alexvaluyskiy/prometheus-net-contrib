@@ -14,6 +14,7 @@ namespace Prometheus.Contrib.EventListeners.Adapters
             public const string RuntimeGen2GcCount = "gen-2-gc-count";
             public const string RuntimeExceptionCount = "exception-count";
             public const string RuntimeThreadPoolThreadCount = "threadpool-thread-count";
+            public const string MonitorLockContentionCount = "monitor-lock-contention-count";
             public const string RuntimeThreadPoolQueueLength = "threadpool-queue-length";
             public const string RuntimeThreadPoolCompletedItemsCount = "threadpool-completed-items-count";
             public const string RuntimeTimeInGc = "time-in-gc";
@@ -34,9 +35,10 @@ namespace Prometheus.Contrib.EventListeners.Adapters
             public static Gauge RuntimeGcCount = Metrics.CreateGauge("runtime_gc_count", "GC Count", new GaugeConfiguration { LabelNames = new[] { "gen" } });
             public static Gauge RuntimeExceptionCount = Metrics.CreateGauge("runtime_exceptions_total", "Exception Count");
             public static Gauge RuntimeThreadPoolThreadCount = Metrics.CreateGauge("runtime_threadpool_threads_total", "ThreadPool Thread Count");
-            public static Gauge RuntimeThreadPoolQueueLength = Metrics.CreateGauge("runtime_threadpool_queue_length", "Monitor Lock Contention Count");
-            public static Gauge RuntimeThreadPoolCompletedItemsCount = Metrics.CreateGauge("runtime_threadpool_completed_items_total", "ThreadPool Queue Length");
-            public static Gauge RuntimeTimeInGc = Metrics.CreateGauge("runtime_time_in_gc", "ThreadPool Completed Work Item Count");
+            public static Gauge MonitorLockContentionCount = Metrics.CreateGauge("runtime_lock_contention_total", "Monitor Lock Contention Count");
+            public static Gauge RuntimeThreadPoolQueueLength = Metrics.CreateGauge("runtime_threadpool_queue_length", "ThreadPool Queue Length");
+            public static Gauge RuntimeThreadPoolCompletedItemsCount = Metrics.CreateGauge("runtime_threadpool_completed_items_total", "ThreadPool Completed Work Item Count");
+            public static Gauge RuntimeTimeInGc = Metrics.CreateGauge("runtime_time_in_gc_ratio", "% Time in GC since last GC");
             public static Gauge RuntimeGcSize = Metrics.CreateGauge("runtime_gc_size_bytes", "GC size in bytes", new GaugeConfiguration { LabelNames = new[] { "gen" } });
             public static Gauge RuntimeAllocRate = Metrics.CreateGauge("runtime_allocation_rate_bytes", "Allocation Rate in bytes");
             public static Gauge RuntimeAssemblyCount = Metrics.CreateGauge("runtime_assemblies_total", "Number of Assemblies Loaded");
@@ -70,6 +72,9 @@ namespace Prometheus.Contrib.EventListeners.Adapters
                     break;
                 case EventCountersConstants.RuntimeThreadPoolThreadCount:
                     PrometheusCounters.RuntimeThreadPoolThreadCount.Set(value);
+                    break;
+                case EventCountersConstants.MonitorLockContentionCount:
+                    PrometheusCounters.MonitorLockContentionCount.Set(value);
                     break;
                 case EventCountersConstants.RuntimeThreadPoolQueueLength:
                     PrometheusCounters.RuntimeThreadPoolQueueLength.Set(value);

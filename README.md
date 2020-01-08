@@ -38,9 +38,10 @@ public class Startup
 | runtime_gc_count | Gauge  | GC Count  |
 | runtime_exceptions_total | Gauge  | Exception Count  |
 | runtime_threadpool_threads_total | Gauge  | ThreadPool Thread Count  |
-| runtime_threadpool_queue_length | Gauge  | Monitor Lock Contention Count  |
-| runtime_threadpool_completed_items_total | Gauge  | ThreadPool Queue Length  |
-| runtime_time_in_gc | Gauge  | ThreadPool Completed Work Item Count  |
+| runtime_lock_contention_total | Gauge  | Monitor Lock Contention Count  |
+| runtime_threadpool_queue_length | Gauge  | ThreadPool Queue Length  |
+| runtime_threadpool_completed_items_total | Gauge  | ThreadPool Completed Work Item Count  |
+| runtime_time_in_gc_ratio | Gauge  | % Time in GC since last GC  |
 | runtime_gc_size_bytes | Gauge  | GC size in bytes  |
 | runtime_allocation_rate_bytes | Gauge  | Allocation Rate in bytes  |
 | runtime_assemblies_total | Gauge  | Number of Assemblies Loaded  |
