@@ -5,6 +5,7 @@
     <RootNamespace>Prometheus.Contrib</RootNamespace>
     <AssemblyName>prometheus-net.Contrib</AssemblyName>
     <PackageId>prometheus-net.Contrib</PackageId>
+    <PackageTags>prometheus metrics</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
