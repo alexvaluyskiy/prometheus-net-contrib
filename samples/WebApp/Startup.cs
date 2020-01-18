@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using Prometheus;
 using MassTransit;
 using System;
+using GreenPipes;
 using MassTransit.Saga;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -50,13 +51,27 @@ namespace WebApp
                     {
                         receiveEndpointConfigurator.StateMachineSaga<OrderState>(provider);
                     });
+
+                    factoryConfigurator.ReceiveEndpoint("test_courier_execute", receiveEndpointConfigurator =>
+                    {
+                        var compnsateUri = new Uri("queue:test_courier_compensate");
+                        receiveEndpointConfigurator.ExecuteActivityHost<DownloadImageActivity, DownloadImageArguments>(compnsateUri, provider);
+                        receiveEndpointConfigurator.ExecuteActivityHost<FilterImageActivity, FilterImageArguments>(compnsateUri, provider);
+                    });
+
+                    factoryConfigurator.ReceiveEndpoint("test_courier_compensate", receiveEndpointConfigurator =>
+                    {
+                        receiveEndpointConfigurator.CompensateActivityHost<DownloadImageActivity, DownloadImageLog>(provider);
+                    });
                 }),
                 config =>
                 {
                     config.AddConsumer<TestConsumer>();
                     config.AddSagaStateMachine<OrderStateMachine, OrderState>();
-                }, options =>  options.FailureStatus = HealthStatus.Unhealthy);
 
+                    config.AddActivity<DownloadImageActivity, DownloadImageArguments, DownloadImageLog>();
+                    config.AddActivity<FilterImageActivity, FilterImageArguments, FilterImageLog>();
+                }, options =>  options.FailureStatus = HealthStatus.Unhealthy);
 
             services.AddPrometheusAspNetCoreMetrics();
             services.AddPrometheusMassTransitMetrics();

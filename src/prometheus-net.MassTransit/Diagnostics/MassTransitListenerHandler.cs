@@ -51,6 +51,16 @@ namespace Prometheus.MassTransit.Diagnostics
             public static readonly Counter SagaSentQuery = Metrics.CreateCounter(
                 "masstransit_saga_sent_queries_total",
                 "The time to receive a message, in seconds.");
+
+            public static readonly Counter CourierExecute = Metrics.CreateCounter(
+                "masstransit_courier_executed_total",
+                "The time to receive a message, in seconds.",
+                new CounterConfiguration { LabelNames = new[] { "activity" } });
+
+            public static readonly Counter CourierCompensate = Metrics.CreateCounter(
+                "masstransit_courier_compensate_total",
+                "The time to receive a message, in seconds.",
+                new CounterConfiguration { LabelNames = new[] { "activity" } });
         }
 
         public MassTransitListenerHandler(string sourceName) : base(sourceName)
@@ -142,10 +152,20 @@ namespace Prometheus.MassTransit.Diagnostics
 
                 case OperationName.Courier.Execute:
                     {
+                        var activityType = activity.Tags.Where(c => c.Key == DiagnosticHeaders.ActivityType).Select(c => c.Value).FirstOrDefault();
+
+                        PrometheusCounters.CourierExecute
+                            .WithLabels(activityType)
+                            .Inc();
                     }
                     break;
                 case OperationName.Courier.Compensate:
                     {
+                        var activityType = activity.Tags.Where(c => c.Key == DiagnosticHeaders.ActivityType).Select(c => c.Value).FirstOrDefault();
+
+                        PrometheusCounters.CourierCompensate
+                            .WithLabels(activityType)
+                            .Inc();
                     }
                     break;
             }
