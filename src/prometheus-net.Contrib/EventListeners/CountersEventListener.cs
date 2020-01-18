@@ -7,7 +7,7 @@ namespace Prometheus.Contrib.EventListeners
 {
     public class CountersEventListener : EventListener
     {
-        private Dictionary<string, ICounterAdapter> counterAdapters = new Dictionary<string, ICounterAdapter>()
+        private readonly Dictionary<string, ICounterAdapter> counterAdapters = new Dictionary<string, ICounterAdapter>
         {
             ["System.Runtime"] = new PrometheusRuntimeCounterAdapter(),
             ["Microsoft.AspNetCore.Hosting"] = new PrometheusAspNetCoreCounterAdapter(),
@@ -16,7 +16,7 @@ namespace Prometheus.Contrib.EventListeners
             ["Grpc.Net.Client"] = new PrometheusGrpcServerCounterAdapter()
         };
 
-        private IDictionary<string, string> eventArguments = new Dictionary<string, string>
+        private readonly IDictionary<string, string> eventArguments = new Dictionary<string, string>
         {
             ["EventCounterIntervalSec"] = "10"
         };
