@@ -31,5 +31,23 @@ namespace WebApp.Controllers
 
             return Ok();
         }
+
+        [HttpGet("saga")]
+        public async Task<IActionResult> TestSaga()
+        {
+            var orderId = Guid.NewGuid();
+
+            await endpoint.Publish<SubmitOrder>(new
+            {
+                OrderId = orderId
+            });
+
+            await endpoint.Publish<OrderAccepted>(new
+            {
+                OrderId = orderId
+            });
+
+            return Ok();
+        }
     }
 }

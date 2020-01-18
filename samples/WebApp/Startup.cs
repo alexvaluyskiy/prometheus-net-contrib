@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using Prometheus;
 using MassTransit;
 using System;
+using MassTransit.Saga;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using WebApp.Data;
@@ -33,6 +34,8 @@ namespace WebApp
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddSingleton<ISagaRepository<OrderState>>(provider => new InMemorySagaRepository<OrderState>());
+
             services.AddMassTransit(
                 provider => Bus.Factory.CreateUsingRabbitMq(factoryConfigurator =>
                 {
@@ -42,10 +45,16 @@ namespace WebApp
                     {
                         receiveEndpointConfigurator.Consumer<TestConsumer>(provider);
                     });
+
+                    factoryConfigurator.ReceiveEndpoint("test_saga", receiveEndpointConfigurator =>
+                    {
+                        receiveEndpointConfigurator.StateMachineSaga<OrderState>(provider);
+                    });
                 }),
                 config =>
                 {
                     config.AddConsumer<TestConsumer>();
+                    config.AddSagaStateMachine<OrderStateMachine, OrderState>();
                 }, options =>  options.FailureStatus = HealthStatus.Unhealthy);
 
 
