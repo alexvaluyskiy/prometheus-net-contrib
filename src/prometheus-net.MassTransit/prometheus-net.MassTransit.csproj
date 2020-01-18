@@ -14,8 +14,4 @@
     <ProjectReference Include="..\prometheus-net.Contrib\prometheus-net.Contrib.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Observers\" />
-  </ItemGroup>
-
 </Project>
