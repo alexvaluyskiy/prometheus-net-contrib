@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-W
+
 namespace Prometheus.Contrib.Core
 {
     internal class DiagnosticSourceListener : IObserver<KeyValuePair<string, object>>

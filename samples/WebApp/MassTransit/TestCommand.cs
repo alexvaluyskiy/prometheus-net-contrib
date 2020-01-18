@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebApp.Consumers
+namespace WebApp.MassTransit
 {
     public class TestCommand
     {

@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.Consumers;
+using WebApp.MassTransit;
 
 namespace WebApp.Controllers
 {

@@ -4,24 +4,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MassTransit.AspNetCoreIntegration;
-using StackExchange.Redis;
 using Microsoft.Data.SqlClient;
 using Prometheus;
 using MassTransit;
-using WebApp.Consumers;
-using MassTransit.ActiveMqTransport;
-using MassTransit.ActiveMqTransport.Configurators;
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using WebApp.Data;
-using Microsoft.AspNetCore.Routing;
+using WebApp.MassTransit;
 
 namespace WebApp
 {
     public class Startup
     {
-        public static ConnectionMultiplexer connection = ConnectionMultiplexer.Connect("");
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -39,9 +34,10 @@ namespace WebApp
             });
 
             services.AddMassTransit(
-                provider => Bus.Factory.CreateUsingActiveMq(factoryConfigurator =>
+                provider => Bus.Factory.CreateUsingRabbitMq(factoryConfigurator =>
                 {
-                    var host = factoryConfigurator.Host(new ConfigurationHostSettings(new Uri("activemq://localhost:61616")));
+                    factoryConfigurator.Host(new Uri("amqp://localhost:5672/"));
+
                     factoryConfigurator.ReceiveEndpoint("test_events", receiveEndpointConfigurator =>
                     {
                         receiveEndpointConfigurator.Consumer<TestConsumer>(provider);
@@ -50,7 +46,7 @@ namespace WebApp
                 config =>
                 {
                     config.AddConsumer<TestConsumer>();
-                });
+                }, options =>  options.FailureStatus = HealthStatus.Unhealthy);
 
             services.AddPrometheusAspNetCoreMetrics();
 

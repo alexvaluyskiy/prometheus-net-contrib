@@ -15,13 +15,13 @@ services:
     ports:
       - 6379:6379
 
-  activemq:
-    image: rmohr/activemq:latest
+  rabbit:
+    image: "rabbitmq:3.8.2-management"
     environment:
-      - "ACTIVEMQ_ADMIN_LOGIN=admin"
-      - "ACTIVEMQ_ADMIN_PASSWORD=admin"
-      - "ACTIVEMQ_LOGGER_LOGLEVEL=TRACE"
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
+      RABBITMQ_DEFAULT_VHOST: "/"
     ports:
-      - 8161:8161
-      - 61616:61616
-      - 61613:61613
+      - "15672:15672"
+      - "5672:5672"
