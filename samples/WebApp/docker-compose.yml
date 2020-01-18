@@ -9,12 +9,6 @@ services:
     ports:
       - 11433:1433
 
-  redis:
-    image: redis:5
-    command: ["redis-server", "--appendonly", "yes"]
-    ports:
-      - 6379:6379
-
   rabbit:
     image: "rabbitmq:3.8.2-management"
     environment:

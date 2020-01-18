@@ -36,7 +36,7 @@ namespace WebApp
             services.AddMassTransit(
                 provider => Bus.Factory.CreateUsingRabbitMq(factoryConfigurator =>
                 {
-                    factoryConfigurator.Host(new Uri("amqp://localhost:5672/"));
+                    factoryConfigurator.Host(new Uri("amqp://admin:admin@localhost:5672/"));
 
                     factoryConfigurator.ReceiveEndpoint("test_events", receiveEndpointConfigurator =>
                     {
@@ -48,7 +48,9 @@ namespace WebApp
                     config.AddConsumer<TestConsumer>();
                 }, options =>  options.FailureStatus = HealthStatus.Unhealthy);
 
+
             services.AddPrometheusAspNetCoreMetrics();
+            services.AddPrometheusMassTransitMetrics();
 
             services.AddSingleton(provider =>
             {
