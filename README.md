@@ -183,3 +183,17 @@ public class Startup
 | idsrv_unhandled_exceptions_total | Counter  | Gets raised for unhandled exceptions |
 | idsrv_device_authorization_success_total | Counter  | Gets raised for successful device authorization requests |
 | idsrv_device_authorization_success_total | Counter  | Gets raised for failed device authorization requests |
+
+## Prometheus healthchecks
+It is possible to publish all healthchecks results to a prometheus
+```csharp
+public virtual void ConfigureServices(IServiceCollection services)
+{
+    services.AddHealthChecks()
+        .AddSqlServer("<Connection String>", name: "sqlserver")
+
+    services.AddSingleton<IHealthCheckPublisher, PrometheusHealthcheckPublisher>();
+
+    return services;
+}
+```
