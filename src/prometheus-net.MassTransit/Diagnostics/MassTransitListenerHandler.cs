@@ -82,11 +82,8 @@ namespace Prometheus.MassTransit.Diagnostics
                     break;
                 case OperationName.Consumer.Handle:
                     {
-                        //var (messageType, consumerType) = messageTypeContext.Value;
-
-                        //PrometheusCounters.ConsumeMessageCount
-                        //    .WithLabels(consumerType, messageType)
-                        //    .Observe(activity.Duration.TotalSeconds);
+                        PrometheusCounters.ConsumeMessageCount
+                            .Observe(activity.Duration.TotalSeconds);
                     }
                     break;
             }
