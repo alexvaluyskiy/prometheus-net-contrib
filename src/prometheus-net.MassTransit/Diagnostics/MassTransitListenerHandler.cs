@@ -23,15 +23,15 @@ namespace Prometheus.MassTransit.Diagnostics
                 "The time to receive a message, in seconds.",
                 new HistogramConfiguration { LabelNames = new[] { "message" } });
 
-            public static readonly Histogram ConsumeMessageCount = Metrics.CreateHistogram(
-                "masstransit_messages_consumed_total",
-                "The time to consume a message, in seconds.",
-                new HistogramConfiguration { LabelNames = new[] { "consumer" } });
-
             public static readonly Counter ReceiveMessageError = Metrics.CreateCounter(
                 "masstransit_messages_received_errors_total",
                 "The number of message processing failures.",
                 new CounterConfiguration { LabelNames = new[] { "exception" } });
+
+            public static readonly Histogram ConsumeMessageCount = Metrics.CreateHistogram(
+                "masstransit_messages_consumed_total",
+                "The time to consume a message, in seconds.",
+                new HistogramConfiguration { LabelNames = new[] { "consumer" } });
 
             public static readonly Counter ConsumeMessageError = Metrics.CreateCounter(
                 "masstransit_messages_consumed_errors_total",

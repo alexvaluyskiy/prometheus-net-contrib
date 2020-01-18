@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -12,6 +12,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\prometheus-net.Contrib\prometheus-net.Contrib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Observers\" />
   </ItemGroup>
 
 </Project>
