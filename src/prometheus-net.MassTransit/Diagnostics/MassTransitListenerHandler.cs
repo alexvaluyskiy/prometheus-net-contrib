@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
-using System.Threading;
+using System.Linq;
+using MassTransit.Logging;
 using Prometheus.Contrib.Core;
 
 namespace Prometheus.MassTransit.Diagnostics
@@ -10,18 +11,27 @@ namespace Prometheus.MassTransit.Diagnostics
         {
             public static readonly Histogram SendMessageCount = Metrics.CreateHistogram(
                 "masstransit_messages_sent_total",
-                "Total sent messages.",
-                new HistogramConfiguration { LabelNames = new[] { "exchange" } });
+                "Total sent messages.");
 
             public static readonly Counter SendMessageErrors = Metrics.CreateCounter(
                 "masstransit_messages_sent_errors_total",
                 "Total sent messages errors",
                 new CounterConfiguration { LabelNames = new[] { "exception" } });
 
+            public static readonly Histogram ReceiveMessageCount = Metrics.CreateHistogram(
+                "masstransit_messages_received_total",
+                "The time to receive a message, in seconds.",
+                new HistogramConfiguration { LabelNames = new[] { "message" } });
+
             public static readonly Histogram ConsumeMessageCount = Metrics.CreateHistogram(
                 "masstransit_messages_consumed_total",
                 "The time to consume a message, in seconds.",
-                new HistogramConfiguration { LabelNames = new[] { "consumer", "message" } });
+                new HistogramConfiguration { LabelNames = new[] { "consumer" } });
+
+            public static readonly Counter ReceiveMessageError = Metrics.CreateCounter(
+                "masstransit_messages_received_errors_total",
+                "The number of message processing failures.",
+                new CounterConfiguration { LabelNames = new[] { "exception" } });
 
             public static readonly Counter ConsumeMessageError = Metrics.CreateCounter(
                 "masstransit_messages_consumed_errors_total",
@@ -29,60 +39,54 @@ namespace Prometheus.MassTransit.Diagnostics
                 new CounterConfiguration { LabelNames = new[] { "exception" } });
         }
 
-        private readonly PropertyFetcher exchangeFetcher = new PropertyFetcher("Exchange");
-        private readonly PropertyFetcher messageTypeFetcher = new PropertyFetcher("MessageType");
-        private readonly PropertyFetcher consumerTypeFetcher = new PropertyFetcher("ConsumerType");
-
-        private readonly AsyncLocal<string> exchangeContext = new AsyncLocal<string>();
-        private readonly AsyncLocal<(string, string)> messageTypeContext = new AsyncLocal<(string, string)>();
-
         public MassTransitListenerHandler(string sourceName) : base(sourceName)
         {
         }
 
         public override void OnStartActivity(Activity activity, object payload)
         {
-            switch (activity.OperationName)
-            {
-                case "Transport.Send":
-                    {
-                        var exchangeType = exchangeFetcher.Fetch(payload);
-                        exchangeContext.Value = exchangeType.ToString();
-                    }
-                    break;
-                case "Transport.Receive":
-                    break;
-                case "Consumer.Consume":
-                    {
-                        var messageType = messageTypeFetcher.Fetch(payload);
-                        var consumerType = consumerTypeFetcher.Fetch(payload);
-
-                        messageTypeContext.Value = (messageType.ToString(), consumerType.ToString());
-
-                    }
-                    break;
-            }
         }
 
         public override void OnStopActivity(Activity activity, object payload)
         {
             switch (activity.OperationName)
             {
-                case "Transport.Send":
+                case OperationName.Transport.Send:
                     {
-                        var exchangeType = exchangeContext.Value;
-                        PrometheusCounters.SendMessageCount
-                            .WithLabels(exchangeType)
+                        PrometheusCounters.SendMessageCount.Observe(activity.Duration.TotalSeconds);
+                    }
+                    break;
+                case OperationName.Transport.Receive:
+                    {
+                        var messageType = activity.Tags
+                            .Where(c => c.Key == DiagnosticHeaders.MessageTypes)
+                            .Select(c => c.Value)
+                            .FirstOrDefault();
+
+                        PrometheusCounters.ReceiveMessageCount
+                            .WithLabels(messageType)
                             .Observe(activity.Duration.TotalSeconds);
                     }
                     break;
-                case "Consumer.Consume":
+                case OperationName.Consumer.Consume:
                     {
-                        var (messageType, consumerType) = messageTypeContext.Value;
+                        var consumerType = activity.Tags
+                            .Where(c => c.Key == DiagnosticHeaders.ConsumerType)
+                            .Select(c => c.Value)
+                            .FirstOrDefault();
 
                         PrometheusCounters.ConsumeMessageCount
-                            .WithLabels(consumerType, messageType)
+                            .WithLabels(consumerType)
                             .Observe(activity.Duration.TotalSeconds);
+                    }
+                    break;
+                case OperationName.Consumer.Handle:
+                    {
+                        //var (messageType, consumerType) = messageTypeContext.Value;
+
+                        //PrometheusCounters.ConsumeMessageCount
+                        //    .WithLabels(consumerType, messageType)
+                        //    .Observe(activity.Duration.TotalSeconds);
                     }
                     break;
             }
@@ -92,10 +96,13 @@ namespace Prometheus.MassTransit.Diagnostics
         {
             switch (activity.OperationName)
             {
-                case "Transport.Send":
+                case OperationName.Transport.Send:
                     PrometheusCounters.SendMessageErrors.Inc();
                     break;
-                case "Consumer.Consume":
+                case OperationName.Transport.Receive:
+                    PrometheusCounters.ReceiveMessageError.Inc();
+                    break;
+                case OperationName.Consumer.Consume:
                     PrometheusCounters.ConsumeMessageError.Inc();
                     break;
             }
