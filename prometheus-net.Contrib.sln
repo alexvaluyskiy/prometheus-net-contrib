@@ -23,6 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "prometheus-net.Esquio", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AC951721-6E15-4E0A-A15A-E268AA6DDAEA}"
 	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
 		.github\workflows\publish-nuget-packages.yaml = .github\workflows\publish-nuget-packages.yaml
 		README.md = README.md
 		.github\workflows\run-tests.yaml = .github\workflows\run-tests.yaml
