@@ -1,14 +1,11 @@
-﻿using MassTransit;
-using StackExchange.Redis;
-using System;
-using Microsoft.Data.SqlClient;
+﻿using System;
 using System.Threading.Tasks;
-using WebApp;
-using WebApp.Data;
+using MassTransit;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Transactions;
+using WebApp.Data;
 
-namespace WebApp.Consumers
+namespace WebApp.MassTransit
 {
     public class TestConsumer : IConsumer<TestCommand>
     {
@@ -23,9 +20,6 @@ namespace WebApp.Consumers
 
         public async Task Consume(ConsumeContext<TestCommand> context)
         {
-            //var database = Startup.connection.GetDatabase();
-            //database.StringGet("test1");
-
             await testContext.TestEntities.ToListAsync();
 
             var command = connection.CreateCommand();

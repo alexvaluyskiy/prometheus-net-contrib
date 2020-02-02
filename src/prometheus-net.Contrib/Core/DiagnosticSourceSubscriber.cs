@@ -9,10 +9,9 @@ namespace Prometheus.Contrib.Core
     {
         private readonly Func<string, DiagnosticListenerHandler> handlerFactory;
         private readonly Func<DiagnosticListener, bool> diagnosticSourceFilter;
-        //private readonly Func<string, object, object, bool> isEnabledFilter;
         private long disposed;
         private IDisposable allSourcesSubscription;
-        private List<IDisposable> listenerSubscriptions;
+        private readonly List<IDisposable> listenerSubscriptions;
 
         public DiagnosticSourceSubscriber(
             Func<string, DiagnosticListenerHandler> handlerFactory,

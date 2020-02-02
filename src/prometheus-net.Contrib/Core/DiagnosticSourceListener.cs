@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Prometheus.Contrib.Core
 {
@@ -24,9 +23,6 @@ namespace Prometheus.Contrib.Core
 
         public void OnNext(KeyValuePair<string, object> value)
         {
-            //if (Activity.Current == null)
-            //    return;
-
             try
             {
                 if (value.Key.EndsWith("Start"))
@@ -38,7 +34,7 @@ namespace Prometheus.Contrib.Core
                 else
                     handler.OnCustom(value.Key, Activity.Current, value.Value);
             }
-            catch (Exception ex)
+            catch
             {
             }
         }

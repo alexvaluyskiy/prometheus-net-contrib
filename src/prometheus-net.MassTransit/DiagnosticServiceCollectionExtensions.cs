@@ -1,5 +1,7 @@
+using MassTransit;
 using Prometheus.Contrib.Core;
 using Prometheus.MassTransit.Diagnostics;
+using Prometheus.MassTransit.Observers;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -13,6 +15,13 @@ namespace Microsoft.Extensions.DependencyInjection
             aspNetCoreListenerHandler.Subscribe();
 
             services.AddSingleton(aspNetCoreListenerHandler);
+        }
+
+        public static void ConnectPrometheusObservers(this IBusControl busControl)
+        {
+            busControl.ConnectPublishObserver(new PrometheusPublishObserver());
+            busControl.ConnectReceiveObserver(new PrometheusConsumeObserver());
+            busControl.ConnectSendObserver(new PrometheusSendObserver());
         }
     }
 }
