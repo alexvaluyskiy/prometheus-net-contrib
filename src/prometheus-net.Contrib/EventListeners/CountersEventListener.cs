@@ -13,7 +13,8 @@ namespace Prometheus.Contrib.EventListeners
             ["Microsoft.AspNetCore.Hosting"] = new PrometheusAspNetCoreCounterAdapter(),
             ["Microsoft.AspNetCore.Http.Connections"] = new PrometheusSignalRCounterAdapter(),
             ["Grpc.AspNetCore.Server"] = new PrometheusGrpcServerCounterAdapter(),
-            ["Grpc.Net.Client"] = new PrometheusGrpcServerCounterAdapter()
+            ["Grpc.Net.Client"] = new PrometheusGrpcServerCounterAdapter(),
+            ["Microsoft.EntityFrameworkCore"] = new PrometheusEfCoreCounterAdapter()
         };
 
         private readonly IDictionary<string, string> eventArguments = new Dictionary<string, string>
