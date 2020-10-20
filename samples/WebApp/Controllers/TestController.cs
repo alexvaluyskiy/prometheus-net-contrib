@@ -9,12 +9,12 @@ namespace WebApp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class MonitoringController : ControllerBase
+    public class TestController : ControllerBase
     {
         private readonly SqlConnection sqlConnection;
         private readonly TestContext testContext;
 
-        public MonitoringController(SqlConnection sqlConnection, TestContext testContext)
+        public TestController(SqlConnection sqlConnection, TestContext testContext)
         {
             this.sqlConnection = sqlConnection;
             this.testContext = testContext;
