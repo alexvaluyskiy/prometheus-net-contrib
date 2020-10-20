@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyCaching.Core" Version="0.8.2" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\prometheus-net.Contrib\prometheus-net.Contrib.csproj" />
   </ItemGroup>
 

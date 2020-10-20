@@ -13,10 +13,15 @@
     </PackageReference>
     <PackageReference Include="prometheus-net" Version="3.4.0" />
     <PackageReference Include="prometheus-net.AspNetCore" Version="3.4.0" />
+
+    <PackageReference Include="EasyCaching.Redis" Version="0.9.0" />
+    <PackageReference Include="EasyCaching.InMemory" Version="0.9.0" />
+    <PackageReference Include="EasyCaching.Serialization.Json" Version="0.9.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\prometheus-net.Contrib\prometheus-net.Contrib.csproj" />
+    <ProjectReference Include="..\..\src\prometheus-net.EasyCaching\prometheus-net.EasyCaching.csproj" />
     <ProjectReference Include="..\..\src\prometheus-net.EntityFramework\prometheus-net.EntityFramework.csproj" />
   </ItemGroup>
 
