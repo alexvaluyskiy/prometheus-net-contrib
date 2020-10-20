@@ -12,6 +12,7 @@ namespace Prometheus.Contrib.EventListeners.Adapters
             public const string RuntimeGen0GcCount = "gen-0-gc-count";
             public const string RuntimeGen1GcCount = "gen-1-gc-count";
             public const string RuntimeGen2GcCount = "gen-2-gc-count";
+            public const string RuntimeGcFragmentation = "gc-fragmentation";
             public const string RuntimeExceptionCount = "exception-count";
             public const string RuntimeThreadPoolThreadCount = "threadpool-thread-count";
             public const string MonitorLockContentionCount = "monitor-lock-contention-count";
@@ -22,9 +23,12 @@ namespace Prometheus.Contrib.EventListeners.Adapters
             public const string RuntimeGen1Size = "gen-1-size";
             public const string RuntimeGen2Size = "gen-2-size";
             public const string RuntimeLohSize = "loh-size";
+            public const string RuntimePohSize = "poh-size";
             public const string RuntimeAllocRate = "alloc-rate";
             public const string RuntimeAssemblyCount = "assembly-count";
             public const string RuntimeActiveTimerCount = "active-timer-count";
+            public const string RuntimeIlBytesJitted = "il-bytes-jitted";
+            public const string RuntimeMethodsJittedCount = "methods-jitted-count";
         }
 
         private static class PrometheusCounters
@@ -33,6 +37,7 @@ namespace Prometheus.Contrib.EventListeners.Adapters
             public static Gauge RuntimeWorkingSet = Metrics.CreateGauge("runtime_memory_working_set_megabytes", "Working Set in megabytes");
             public static Gauge RuntimeGcHeapSize = Metrics.CreateGauge("runtime_gc_heap_size_megabytes", "GC Heap Size in megabytes");
             public static Gauge RuntimeGcCount = Metrics.CreateGauge("runtime_gc_count", "GC Count", new GaugeConfiguration { LabelNames = new[] { "gen" } });
+            public static Gauge RuntimeGcFragmentation = Metrics.CreateGauge("runtime_gc_fragmentation_ratio", "GC Fragmentation");
             public static Gauge RuntimeExceptionCount = Metrics.CreateGauge("runtime_exceptions_total", "Exception Count");
             public static Gauge RuntimeThreadPoolThreadCount = Metrics.CreateGauge("runtime_threadpool_threads_total", "ThreadPool Thread Count");
             public static Gauge MonitorLockContentionCount = Metrics.CreateGauge("runtime_lock_contention_total", "Monitor Lock Contention Count");
@@ -43,6 +48,8 @@ namespace Prometheus.Contrib.EventListeners.Adapters
             public static Gauge RuntimeAllocRate = Metrics.CreateGauge("runtime_allocation_rate_bytes", "Allocation Rate in bytes");
             public static Gauge RuntimeAssemblyCount = Metrics.CreateGauge("runtime_assemblies_total", "Number of Assemblies Loaded");
             public static Gauge RuntimeActiveTimerCount = Metrics.CreateGauge("runtime_active_timers_total", "Number of Active Timers");
+            public static Gauge RuntimeIlBytesJitted = Metrics.CreateGauge("runtime_il_jitted_bytes", "IL Bytes Jitted");
+            public static Gauge RuntimeMethodsJittedCount = Metrics.CreateGauge("runtime_methods_jitted_total", "Number of Methods Jitted");
         }
 
         public void OnCounterEvent(string name, double value)
@@ -66,6 +73,9 @@ namespace Prometheus.Contrib.EventListeners.Adapters
                     break;
                 case EventCountersConstants.RuntimeGen2GcCount:
                     PrometheusCounters.RuntimeGcCount.WithLabels("2").Set(value);
+                    break;
+                case EventCountersConstants.RuntimeGcFragmentation:
+                    PrometheusCounters.RuntimeGcFragmentation.Set(value);
                     break;
                 case EventCountersConstants.RuntimeExceptionCount:
                     PrometheusCounters.RuntimeExceptionCount.Set(value);
@@ -97,6 +107,9 @@ namespace Prometheus.Contrib.EventListeners.Adapters
                 case EventCountersConstants.RuntimeLohSize:
                     PrometheusCounters.RuntimeGcSize.WithLabels("loh").Set(value);
                     break;
+                case EventCountersConstants.RuntimePohSize:
+                    PrometheusCounters.RuntimeGcSize.WithLabels("poh").Set(value);
+                    break;
                 case EventCountersConstants.RuntimeAllocRate:
                     PrometheusCounters.RuntimeAllocRate.Set(value);
                     break;
@@ -105,6 +118,12 @@ namespace Prometheus.Contrib.EventListeners.Adapters
                     break;
                 case EventCountersConstants.RuntimeActiveTimerCount:
                     PrometheusCounters.RuntimeActiveTimerCount.Set(value);
+                    break;
+                case EventCountersConstants.RuntimeIlBytesJitted:
+                    PrometheusCounters.RuntimeIlBytesJitted.Set(value);
+                    break;
+                case EventCountersConstants.RuntimeMethodsJittedCount:
+                    PrometheusCounters.RuntimeMethodsJittedCount.Set(value);
                     break;
             }
         }
