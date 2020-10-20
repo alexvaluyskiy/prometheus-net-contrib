@@ -1,67 +1,52 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using MassTransit;
-using MassTransit.Courier;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.MassTransit;
+using Microsoft.Data.SqlClient;
+using WebApp.Data;
 
 namespace WebApp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TestController : ControllerBase
+    public class MonitoringController : ControllerBase
     {
-        private readonly IBus bus;
+        private readonly SqlConnection sqlConnection;
+        private readonly TestContext testContext;
 
-        public TestController(IBus bus)
+        public MonitoringController(SqlConnection sqlConnection, TestContext testContext)
         {
-            this.bus = bus;
+            this.sqlConnection = sqlConnection;
+            this.testContext = testContext;
         }
 
-        [HttpGet("send")]
-        public async Task<IActionResult> TestSend()
+        [HttpGet("http-in")]
+        public async Task<IActionResult> HttpIn() => Ok("It's OK");
+
+        [HttpGet("http-out")]
+        public async Task<IActionResult> HttpOut()
         {
-            await bus.Publish(new TestCommand
-            {
-                Id = Guid.NewGuid()
-            });
-
-            using (var client = new HttpClient())
-                await client.GetAsync("https://www.google.com");
-
-            return Ok();
+            using var client = new HttpClient();
+            await client.GetAsync("https://www.google.com");
+            return Ok("It's OK");
         }
 
-        [HttpGet("saga")]
-        public async Task<IActionResult> TestSaga()
+        [HttpGet("sql-query")]
+        public async Task<IActionResult> SqlQuery()
         {
-            var orderId = Guid.NewGuid();
+            var command = this.sqlConnection.CreateCommand();
+            command.CommandText = "SELECT 1";
+            await command.ExecuteNonQueryAsync();
 
-            await bus.Publish<SubmitOrder>(new
-            {
-                OrderId = orderId
-            });
-
-            await bus.Publish<OrderAccepted>(new
-            {
-                OrderId = orderId
-            });
-
-            return Ok();
+            return Ok("It's OK");
         }
 
-        [HttpGet("courier")]
-        public async Task<IActionResult> TestCourier()
+        [HttpGet("efcore-query")]
+        public async Task<IActionResult> EfCore()
         {
-            var builder = new RoutingSlipBuilder(NewId.NextGuid());
-            builder.AddActivity("DownloadImage", new Uri("queue:test_courier_execute"));
-            builder.AddActivity("FilterImage", new Uri("queue:test_courier_execute"));
-            var routingSlip = builder.Build();
+            await this.testContext.Database.CanConnectAsync();
 
-            await bus.Execute(routingSlip);
-
-            return Ok();
+            return Ok("It's OK");
         }
     }
 }
