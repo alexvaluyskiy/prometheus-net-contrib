@@ -29,7 +29,7 @@ namespace Prometheus.Contrib.Core
         /// <returns>Property fetched.</returns>
         public T Fetch(object obj)
         {
-            if (!this.TryFetch(obj, out T value))
+            if (!TryFetch(obj, out T value))
             {
                 throw new ArgumentException("Supplied object was null or did not match the expected type.", nameof(obj));
             }
@@ -51,19 +51,19 @@ namespace Prometheus.Contrib.Core
                 return false;
             }
 
-            if (this.innerFetcher == null)
+            if (innerFetcher == null)
             {
                 var type = obj.GetType().GetTypeInfo();
-                var property = type.DeclaredProperties.FirstOrDefault(p => string.Equals(p.Name, this.propertyName, StringComparison.InvariantCultureIgnoreCase));
+                var property = type.DeclaredProperties.FirstOrDefault(p => string.Equals(p.Name, propertyName, StringComparison.InvariantCultureIgnoreCase));
                 if (property == null)
                 {
-                    property = type.GetProperty(this.propertyName);
+                    property = type.GetProperty(propertyName);
                 }
 
-                this.innerFetcher = PropertyFetch.FetcherForProperty(property);
+                innerFetcher = PropertyFetch.FetcherForProperty(property);
             }
 
-            return this.innerFetcher.TryFetch(obj, out value);
+            return innerFetcher.TryFetch(obj, out value);
         }
 
         // see https://github.com/dotnet/corefx/blob/master/src/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/DiagnosticSourceEventSource.cs
@@ -100,14 +100,14 @@ namespace Prometheus.Contrib.Core
 
                 public TypedPropertyFetch(PropertyInfo property)
                 {
-                    this.propertyFetch = (Func<TDeclaredObject, TDeclaredProperty>)property.GetMethod.CreateDelegate(typeof(Func<TDeclaredObject, TDeclaredProperty>));
+                    propertyFetch = (Func<TDeclaredObject, TDeclaredProperty>)property.GetMethod.CreateDelegate(typeof(Func<TDeclaredObject, TDeclaredProperty>));
                 }
 
                 public override bool TryFetch(object obj, out T value)
                 {
                     if (obj is TDeclaredObject o)
                     {
-                        value = this.propertyFetch(o);
+                        value = propertyFetch(o);
                         return true;
                     }
 
