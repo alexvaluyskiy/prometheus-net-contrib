@@ -22,7 +22,7 @@ namespace Prometheus.Contrib.Diagnostics
                 "Total HTTP requests sent errors.");
         }
 
-        private readonly PropertyFetcher stopResponseFetcher = new PropertyFetcher("Response");
+        private readonly PropertyFetcher<object> stopResponseFetcher = new PropertyFetcher<object>("Response");
 
         public HttpClientListenerHandler(string sourceName) : base(sourceName)
         {

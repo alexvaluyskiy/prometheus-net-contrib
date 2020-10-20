@@ -22,7 +22,7 @@ namespace Prometheus.Contrib.Diagnostics
                 "Total GRPC requests sent errors.");
         }
 
-        private readonly PropertyFetcher stopResponseFetcher = new PropertyFetcher("Response");
+        private readonly PropertyFetcher<object> stopResponseFetcher = new PropertyFetcher<object>("Response");
 
         public GrpcClientListenerHandler(string sourceName) : base(sourceName)
         {

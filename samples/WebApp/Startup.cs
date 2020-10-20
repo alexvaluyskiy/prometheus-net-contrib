@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Data.SqlClient;
 using Prometheus;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using WebApp.Data;
 
 namespace WebApp
@@ -37,6 +38,37 @@ namespace WebApp
             });
 
             services.AddPrometheusAspNetCoreMetrics();
+            services.AddPrometheusEasyCachingMetrics();
+
+            AddCachingExtensions(services);
+        }
+
+        private void AddCachingExtensions(IServiceCollection services)
+        {
+            services.AddEasyCaching(options =>
+            {
+                var connectionString = Configuration.GetConnectionString("RedisConnection");
+
+                if (!string.IsNullOrEmpty(connectionString))
+                {
+                    options.UseRedis(
+                        config =>
+                        {
+                            config.DBConfig.Configuration = connectionString;
+                            config.SerializerName = "json";
+                            config.EnableLogging = true;
+                        },
+                        "default");
+                }
+                else
+                {
+                    options.UseInMemory("default");
+                }
+
+                options.WithJson(
+                    jsonSerializerSettingsConfigure: json => json.ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    "json");
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

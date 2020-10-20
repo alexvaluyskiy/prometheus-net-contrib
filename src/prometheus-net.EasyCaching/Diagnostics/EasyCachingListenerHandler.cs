@@ -18,49 +18,99 @@ namespace Prometheus.EasyCaching.Diagnostics
                 });
         }
 
-        private readonly PropertyFetcher timestampFetcher = new PropertyFetcher("Timestamp");
+        private readonly PropertyFetcher<long> setBeforeOperationFetcher = new PropertyFetcher<long>("Timestamp");
+        private readonly PropertyFetcher<long> setAfterOperationFetcher = new PropertyFetcher<long>("Timestamp");
 
-        private readonly AsyncLocal<long> writeSetLocal = new AsyncLocal<long>();
+        private readonly PropertyFetcher<long> getBeforeOperationFetcher = new PropertyFetcher<long>("Timestamp");
+        private readonly PropertyFetcher<long> getAfterOperationFetcher = new PropertyFetcher<long>("Timestamp");
+
+        private readonly PropertyFetcher<long> removeBeforeOperationFetcher = new PropertyFetcher<long>("Timestamp");
+        private readonly PropertyFetcher<long> removeAfterOperationFetcher = new PropertyFetcher<long>("Timestamp");
+
+        private readonly AsyncLocal<long> writeRemoveLocal = new AsyncLocal<long>();
         private readonly AsyncLocal<long> writeGetLocal = new AsyncLocal<long>();
+        private readonly AsyncLocal<long> writeSetLocal = new AsyncLocal<long>();
 
         public EasyCachingListenerHandler(string sourceName) : base(sourceName)
         {
         }
+
         public override void OnCustom(string name, Activity activity, object payload)
         {
-            switch (activity.OperationName)
+            switch (name)
             {
-                case "EasyCaching.WriteSetCacheBefore" when timestampFetcher.Fetch(payload) is long timestamp:
-                    this.writeSetLocal.Value = timestamp;
-                    break;
-                case "EasyCaching.WriteSetCacheAfter" when timestampFetcher.Fetch(payload) is long timestamp:
+                case "EasyCaching.WriteSetCacheBefore":
                     {
-                        var beforeTimeStamp = this.writeSetLocal.Value;
-
-                        if (beforeTimeStamp > 0)
+                        if (setBeforeOperationFetcher.TryFetch(payload, out var timestampBefore))
                         {
-                            var elapsed = TimeSpan.FromTicks(timestamp - beforeTimeStamp).TotalSeconds;
-
-                            PrometheusCounters.EasyCachingOperationDuration
-                                .WithLabels("set")
-                                .Observe(elapsed);
+                            this.writeSetLocal.Value = timestampBefore;
                         }
                     }
                     break;
-                case "EasyCaching.WriteGetCacheBefore" when timestampFetcher.Fetch(payload) is long timestamp:
-                    this.writeGetLocal.Value = timestamp;
-                    break;
-                case "EasyCaching.WriteGetCacheAfter" when timestampFetcher.Fetch(payload) is long timestamp:
+                case "EasyCaching.WriteSetCacheAfter":
                     {
-                        var beforeTimeStamp = this.writeGetLocal.Value;
+                        var timestampBefore = this.writeSetLocal.Value;
 
-                        if (beforeTimeStamp > 0)
+                        if (setAfterOperationFetcher.TryFetch(payload, out var timestampAfter))
                         {
-                            var elapsed = TimeSpan.FromTicks(timestamp - beforeTimeStamp).TotalSeconds;
+                            var elapsed = TimeSpan.FromTicks(timestampAfter - timestampBefore).TotalSeconds;
 
-                            PrometheusCounters.EasyCachingOperationDuration
-                                .WithLabels("get")
-                                .Observe(elapsed);
+                            if (elapsed == 0)
+                            {
+                                return;
+                            }
+
+                            PrometheusCounters.EasyCachingOperationDuration.WithLabels("set").Observe(elapsed);
+                        }
+                    }
+                    break;
+                case "EasyCaching.WriteGetCacheBefore":
+                    {
+                        if (getBeforeOperationFetcher.TryFetch(payload, out var timestampBefore))
+                        {
+                            this.writeGetLocal.Value = timestampBefore;
+                        }
+                    }
+                    break;
+                case "EasyCaching.WriteGetCacheAfter":
+                    {
+                        var timestampBefore = this.writeGetLocal.Value;
+
+                        if (getAfterOperationFetcher.TryFetch(payload, out var timeStampAfter))
+                        {
+                            var elapsed = TimeSpan.FromTicks(timeStampAfter - timestampBefore).TotalSeconds;
+                            
+                            if (elapsed == 0)
+                            {
+                                return;
+                            }
+
+                            PrometheusCounters.EasyCachingOperationDuration.WithLabels("get").Observe(elapsed);
+                        }
+                    }
+                    break;
+                case "EasyCaching.WriteRemoveCacheBefore":
+                    {
+                        if (removeBeforeOperationFetcher.TryFetch(payload, out var timestampBefore))
+                        {
+                            this.writeGetLocal.Value = timestampBefore;
+                        }
+                    }
+                    break;
+                case "EasyCaching.WriteRemoveCacheAfter":
+                    {
+                        var timestampBefore = this.writeGetLocal.Value;
+
+                        if (removeAfterOperationFetcher.TryFetch(payload, out var timeStampAfter))
+                        {
+                            var elapsed = TimeSpan.FromTicks(timeStampAfter - timestampBefore).TotalSeconds;
+
+                            if (elapsed == 0)
+                            {
+                                return;
+                            }
+
+                            PrometheusCounters.EasyCachingOperationDuration.WithLabels("remove").Observe(elapsed);
                         }
                     }
                     break;

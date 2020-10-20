@@ -52,8 +52,8 @@ namespace Prometheus.Contrib.Diagnostics
             public static readonly Gauge SqlUnpreparedExecs = Metrics.CreateGauge("sqlclient_unprepared_exec", "Number of bytes sent");
         }
 
-        private readonly PropertyFetcher connectionFetcher = new PropertyFetcher("ConnectionId");
-        private readonly PropertyFetcher statisticsFetcher = new PropertyFetcher("Statistics");
+        private readonly PropertyFetcher<object> connectionFetcher = new PropertyFetcher<object>("ConnectionId");
+        private readonly PropertyFetcher<object> statisticsFetcher = new PropertyFetcher<object>("Statistics");
 
         private ConcurrentDictionary<string, Dictionary<string, long>> Statistics = new ConcurrentDictionary<string, Dictionary<string, long>>();
         private readonly AsyncLocal<long> commandTimestampContext = new AsyncLocal<long>();
