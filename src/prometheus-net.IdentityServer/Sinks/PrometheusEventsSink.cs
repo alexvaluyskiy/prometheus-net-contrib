@@ -7,14 +7,14 @@ namespace Prometheus.IdentityServer.Sinks
     public class PrometheusEventsSink : IEventSink
     {
         private static readonly Counter ApiAuthenticationSuccessCount = Metrics.CreateCounter(
-            "idsrv_api_authentication_failure_total",
+            "idsrv_api_authentication_success_total",
             "Gets raised for successful API authentication at the introspection endpoint.",
-            new CounterConfiguration { LabelNames = new[] { "client" } });
+            new CounterConfiguration { LabelNames = new[] { "apiName" } });
 
         private static readonly Counter ApiAuthenticationFailureCount = Metrics.CreateCounter(
             "idsrv_api_authentication_failure_total",
             "Gets raised for failed API authentication at the introspection endpoint.",
-            new CounterConfiguration { LabelNames = new[] { "client" } });
+            new CounterConfiguration { LabelNames = new[] { "apiName" } });
 
         private static readonly Counter ClientAuthenticationSuccessCount = Metrics.CreateCounter(
             "idsrv_client_authentication_success_total",
@@ -50,11 +50,13 @@ namespace Prometheus.IdentityServer.Sinks
 
         private static readonly Counter UserLoginSuccessCount = Metrics.CreateCounter(
             "idsrv_user_login_success_total",
-            "Gets raised by the UI for successful user logins.");
+            "Gets raised by the UI for successful user logins.",
+            new CounterConfiguration { LabelNames = new[] { "client" } });
 
         private static readonly Counter UserLoginFailureCount = Metrics.CreateCounter(
             "idsrv_user_login_failure_total",
-            "Gets raised by the UI for failed user logins.");
+            "Gets raised by the UI for failed user logins.",
+            new CounterConfiguration { LabelNames = new[] { "client" } });
 
         private static readonly Counter UserLogoutSuccessCount = Metrics.CreateCounter(
             "idsrv_user_logout_success_total",
@@ -84,12 +86,13 @@ namespace Prometheus.IdentityServer.Sinks
         {
             switch (evt)
             {
-                case ApiAuthenticationFailureEvent _:
-                    ApiAuthenticationSuccessCount.Inc();
+                case ApiAuthenticationSuccessEvent authenticationSuccessEvent:
+                    ApiAuthenticationSuccessCount.WithLabels(authenticationSuccessEvent.ApiName).Inc();
                     break;
-                case ApiAuthenticationSuccessEvent _:
-                    ApiAuthenticationFailureCount.Inc();
+                case ApiAuthenticationFailureEvent apiAuthenticationFailureEvent:
+                    ApiAuthenticationFailureCount.WithLabels(apiAuthenticationFailureEvent.ApiName).Inc();
                     break;
+
                 case ClientAuthenticationSuccessEvent clientAuthSuccess:
                     ClientAuthenticationSuccessCount.WithLabels(clientAuthSuccess.ClientId).Inc();
                     break;
@@ -111,11 +114,11 @@ namespace Prometheus.IdentityServer.Sinks
                 case TokenRevokedSuccessEvent _:
                     TokenRevokedSuccessCount.Inc();
                     break;
-                case UserLoginSuccessEvent _:
-                    UserLoginSuccessCount.Inc();
+                case UserLoginSuccessEvent userLoginSuccess:
+                    UserLoginSuccessCount.WithLabels(userLoginSuccess.ClientId).Inc();
                     break;
-                case UserLoginFailureEvent _:
-                    UserLoginFailureCount.Inc();
+                case UserLoginFailureEvent userLoginFailure:
+                    UserLoginFailureCount.WithLabels(userLoginFailure.ClientId).Inc();
                     break;
                 case UserLogoutSuccessEvent _:
                     UserLogoutSuccessCount.Inc();
