@@ -1,6 +1,8 @@
+using System;
 using Prometheus.Contrib.Core;
 using Prometheus.Contrib.Diagnostics;
 using Prometheus.Contrib.EventListeners;
+using Prometheus.Contrib.Options;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -26,10 +28,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton(httpClientListenerHandler);
         }
 
-        public static void AddPrometheusSqlClientMetrics(this IServiceCollection services)
+        public static void AddPrometheusSqlClientMetrics(this IServiceCollection services, Action<SqlMetricsOptions> optionsInvoker = null)
         {
+            var sqlMetricsOptions = new SqlMetricsOptions();
+            optionsInvoker?.Invoke(sqlMetricsOptions);
+
             var sqlClientListenerHandler = new DiagnosticSourceSubscriber(
-                name => new SqlClientListenerHandler(name),
+                name => new SqlClientListenerHandler(name, sqlMetricsOptions),
                 listener => listener.Name.Equals("SqlClientDiagnosticListener"));
             sqlClientListenerHandler.Subscribe();
 
