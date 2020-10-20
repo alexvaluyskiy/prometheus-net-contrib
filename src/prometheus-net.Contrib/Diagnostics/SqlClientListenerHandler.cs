@@ -6,11 +6,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using Prometheus.Contrib.Options;
 
 namespace Prometheus.Contrib.Diagnostics
 {
     public class SqlClientListenerHandler : DiagnosticListenerHandler
     {
+        private readonly SqlMetricsOptions options;
+
         private static class PrometheusCounters
         {
             public static readonly Histogram SqlCommandsDuration = Metrics.CreateHistogram(
@@ -55,8 +58,9 @@ namespace Prometheus.Contrib.Diagnostics
         private ConcurrentDictionary<string, Dictionary<string, long>> Statistics = new ConcurrentDictionary<string, Dictionary<string, long>>();
         private readonly AsyncLocal<long> commandTimestampContext = new AsyncLocal<long>();
 
-        public SqlClientListenerHandler(string sourceName) : base(sourceName)
+        public SqlClientListenerHandler(string sourceName, SqlMetricsOptions options) : base(sourceName)
         {
+            this.options = options;
         }
 
         public override void OnCustom(string name, Activity activity, object payload)
@@ -87,11 +91,14 @@ namespace Prometheus.Contrib.Diagnostics
                         long operationTimeStamp = Stopwatch.GetTimestamp() - commandTimestampContext.Value;
                         PrometheusCounters.SqlCommandsDuration.Observe(TimeSpan.FromTicks(operationTimeStamp).TotalSeconds);
 
-                        if (statisticsFetcher.Fetch(payload) is IDictionary currentStatistics)
+                        if (options.CollectStatistics)
                         {
-                            var connection = connectionFetcher.Fetch(payload).ToString();
+                            if (statisticsFetcher.Fetch(payload) is IDictionary currentStatistics)
+                            {
+                                var connection = connectionFetcher.Fetch(payload).ToString();
 
-                            WriteStatisticsMetrics(connection, currentStatistics);
+                                WriteStatisticsMetrics(connection, currentStatistics);
+                            }
                         }
                     }
                     break;
