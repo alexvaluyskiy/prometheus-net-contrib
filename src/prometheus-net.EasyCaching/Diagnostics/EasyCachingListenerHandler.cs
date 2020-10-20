@@ -93,13 +93,13 @@ namespace Prometheus.EasyCaching.Diagnostics
                     {
                         if (removeBeforeOperationFetcher.TryFetch(payload, out var timestampBefore))
                         {
-                            this.writeGetLocal.Value = timestampBefore;
+                            this.writeRemoveLocal.Value = timestampBefore;
                         }
                     }
                     break;
                 case "EasyCaching.WriteRemoveCacheAfter":
                     {
-                        var timestampBefore = this.writeGetLocal.Value;
+                        var timestampBefore = this.writeRemoveLocal.Value;
 
                         if (removeAfterOperationFetcher.TryFetch(payload, out var timeStampAfter))
                         {
