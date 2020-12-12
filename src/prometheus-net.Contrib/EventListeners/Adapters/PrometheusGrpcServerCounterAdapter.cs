@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using Prometheus.Contrib.Core;
-using Prometheus.Contrib.EventListeners.Counters;
+﻿using Prometheus.Contrib.EventListeners.Counters;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
-    internal class PrometheusGrpcServerCounterAdapter : ICounterAdapter
+    internal class PrometheusGrpcServerCounterAdapter : BaseAdapter
     {
         public const string EventSourceName = "Grpc.AspNetCore.Server";
 
@@ -15,25 +13,5 @@ namespace Prometheus.Contrib.EventListeners.Adapters
         internal readonly MeanCounter MessagesSent = new MeanCounter("messages-sent", "grpc_server_messages_sent_total", "Total Messages Sent");
         internal readonly MeanCounter MessagesReceived = new MeanCounter("messages-received", "grpc_server_messages_received_total", "Total Messages Received");
         internal readonly MeanCounter CallsUnimplemented = new MeanCounter("calls-unimplemented", "grpc_server_calls_unimplemented_total", "Total Calls Unimplemented");
-
-        private readonly Dictionary<string, BaseCounter> _counters;
-
-        public PrometheusGrpcServerCounterAdapter()
-        {
-            _counters = CounterUtils.GenerateDictionary(this);
-        }
-
-        public void OnCounterEvent(IDictionary<string, object> eventPayload)
-        {
-            if (!eventPayload.TryGetValue("Name", out var counterName))
-            {
-                return;
-            }
-            
-            if (!_counters.TryGetValue((string) counterName, out var counter))
-                return;
-
-            counter.TryReadEventCounterData(eventPayload);
-        }
     }
 }

@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using Prometheus.Contrib.Core;
-using Prometheus.Contrib.EventListeners.Counters;
+﻿using Prometheus.Contrib.EventListeners.Counters;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
-    internal class PrometheusKestrelCounterAdapter : ICounterAdapter
+    internal class PrometheusKestrelCounterAdapter : BaseAdapter
     {
         public const string EventSourceName = "Microsoft-AspNetCore-Server-Kestrel";
             
@@ -18,25 +16,5 @@ namespace Prometheus.Contrib.EventListeners.Adapters
         internal readonly MeanCounter ConnectionQueueLength = new MeanCounter("connection-queue-length", "kestrel_connections_queue_total", "Length of Kestrel Connection Queue");
         internal readonly MeanCounter RequestQueueLength = new MeanCounter("request-queue-length", "kestrel_requests_queue_total", "Length total HTTP request queue");
         internal readonly MeanCounter CurrentUpgradedRequests = new MeanCounter("current-upgraded-requests", "kestrel_requests_upgraded_total", "Current Upgraded Requests (WebSockets)");
-
-        private readonly Dictionary<string, BaseCounter> _counters;
-
-        public PrometheusKestrelCounterAdapter()
-        {
-            _counters = CounterUtils.GenerateDictionary(this);
-        }
-
-        public void OnCounterEvent(IDictionary<string, object> eventPayload)
-        {
-            if (!eventPayload.TryGetValue("Name", out var counterName))
-            {
-                return;
-            }
-            
-            if (!_counters.TryGetValue((string) counterName, out var counter))
-                return;
-
-            counter.TryReadEventCounterData(eventPayload);
-        }
     }
 }

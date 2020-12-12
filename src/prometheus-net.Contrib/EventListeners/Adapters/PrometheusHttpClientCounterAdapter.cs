@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using Prometheus.Contrib.Core;
-using Prometheus.Contrib.EventListeners.Counters;
+﻿using Prometheus.Contrib.EventListeners.Counters;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
-    internal class PrometheusHttpClientCounterAdapter : ICounterAdapter
+    internal class PrometheusHttpClientCounterAdapter : BaseAdapter
     {
         public const string EventSourceName = "System.Net.Http";
             
@@ -17,25 +15,5 @@ namespace Prometheus.Contrib.EventListeners.Adapters
         internal readonly MeanCounter Http20ConnectionsCurrentTotal = new MeanCounter("http20-connections-current-total", "http_client_http20_connections_current_total", "Current Http 2.0 Connections");
         internal readonly MeanCounter Http11RequestsQueueDuration = new MeanCounter("http11-requests-queue-duration", "http_client_http11_requests_queue_duration", "HTTP 1.1 Requests Queue Duration");
         internal readonly MeanCounter Http20RequestsQueueDuration = new MeanCounter("http20-requests-queue-duration", "http_client_http20_requests_queue_duration", "HTTP 2.0 Requests Queue Duration");
-
-        private readonly Dictionary<string, BaseCounter> _counters;
-
-        public PrometheusHttpClientCounterAdapter()
-        {
-            _counters = CounterUtils.GenerateDictionary(this);
-        }
-
-        public void OnCounterEvent(IDictionary<string, object> eventPayload)
-        {
-            if (!eventPayload.TryGetValue("Name", out var counterName))
-            {
-                return;
-            }
-            
-            if (!_counters.TryGetValue((string) counterName, out var counter))
-                return;
-
-            counter.TryReadEventCounterData(eventPayload);
-        }
     }
 }

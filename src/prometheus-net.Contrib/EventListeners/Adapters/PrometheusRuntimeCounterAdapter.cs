@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using Prometheus.Contrib.Core;
-using Prometheus.Contrib.EventListeners.Counters;
+﻿using Prometheus.Contrib.EventListeners.Counters;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
-    internal class PrometheusRuntimeCounterAdapter : ICounterAdapter
+    internal class PrometheusRuntimeCounterAdapter : BaseAdapter
     {
         public const string EventSourceName = "System.Runtime";
 
@@ -31,31 +29,5 @@ namespace Prometheus.Contrib.EventListeners.Adapters
         internal MeanCounter RuntimeAssemblyCount = new MeanCounter("assembly-count", "runtime_assemblies_total", "Number of Assemblies Loaded");
         internal MeanCounter RuntimeIlBytesJitted = new MeanCounter("il-bytes-jitted", "runtime_il_jitted_bytes", "IL Bytes Jitted");
         internal MeanCounter RuntimeMethodsJittedCount = new MeanCounter("methods-jitted-count", "runtime_methods_jitted_total", "Number of Methods Jitted");
-
-        private readonly Dictionary<string, BaseCounter> _counters;
-
-        private static class PrometheusCounters
-        {
-            public static Gauge RuntimeGcCount = Metrics.CreateGauge("runtime_gc_count", "GC Count", new GaugeConfiguration { LabelNames = new[] { "gen" } });
-            public static Gauge RuntimeGcSize = Metrics.CreateGauge("runtime_gc_size_bytes", "GC size in bytes", new GaugeConfiguration { LabelNames = new[] { "gen" } });
-        }
-        
-        public PrometheusRuntimeCounterAdapter()
-        {
-            _counters = CounterUtils.GenerateDictionary(this);
-        }
-
-        public void OnCounterEvent(IDictionary<string, object> eventPayload)
-        {
-            if (!eventPayload.TryGetValue("Name", out var counterName))
-            {
-                return;
-            }
-            
-            if (!_counters.TryGetValue((string) counterName, out var counter))
-                return;
-
-            counter.TryReadEventCounterData(eventPayload);
-        }
     }
 }

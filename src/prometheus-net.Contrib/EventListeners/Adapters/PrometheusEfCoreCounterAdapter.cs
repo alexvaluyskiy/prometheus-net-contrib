@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using Prometheus.Contrib.Core;
-using Prometheus.Contrib.EventListeners.Counters;
+﻿using Prometheus.Contrib.EventListeners.Counters;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
-    internal class PrometheusEfCoreCounterAdapter : ICounterAdapter
+    internal class PrometheusEfCoreCounterAdapter : BaseAdapter
     {
         public const string EventSourceName = "Microsoft.EntityFrameworkCore";
         
@@ -18,25 +16,5 @@ namespace Prometheus.Contrib.EventListeners.Adapters
         internal readonly IncrementCounter ExecutionStrategyOperationFailuresPerSecond = new IncrementCounter("execution-strategy-operation-failures-per-second", "efcore_execution_strategy_operation_failures_per_second", "Execution Strategy Operation Failures");
         internal readonly MeanCounter TotalOptimisticConcurrencyFailures = new MeanCounter("total-optimistic-concurrency-failures", "efcore_optimistic_concurrency_failures_total", "Optimistic Concurrency Failures (Total)");
         internal readonly IncrementCounter OptimisticConcurrencyFailuresPerSecond = new IncrementCounter("optimistic-concurrency-failures-per-second", "efcore_optimistic_concurrency_failures_per_second", "Optimistic Concurrency Failures");
-        
-        private readonly Dictionary<string, BaseCounter> _counters;
-
-        public PrometheusEfCoreCounterAdapter()
-        {
-            _counters = CounterUtils.GenerateDictionary(this);
-        }
-
-        public void OnCounterEvent(IDictionary<string, object> eventPayload)
-        {
-            if (!eventPayload.TryGetValue("Name", out var counterName))
-            {
-                return;
-            }
-            
-            if (!_counters.TryGetValue((string) counterName, out var counter))
-                return;
-
-            counter.TryReadEventCounterData(eventPayload);
-        }
     }
 }
