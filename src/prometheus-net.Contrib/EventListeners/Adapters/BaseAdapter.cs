@@ -4,7 +4,7 @@ using Prometheus.Contrib.EventListeners.Counters;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
-    public abstract class BaseAdapter : ICounterAdapter
+    internal abstract class BaseAdapter : ICounterAdapter
     {
         private readonly Dictionary<string, BaseCounter> _counters;
 
