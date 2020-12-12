@@ -51,9 +51,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton(grpcClientListenerHandler);
         }
 
-        public static void AddPrometheusCounters(this IServiceCollection services)
+        public static void AddPrometheusCounters(this IServiceCollection services, int refreshPeriodSeconds = 10)
         {
-            services.AddSingleton(new CountersEventListener());
+            services.AddSingleton(new CountersEventListener(refreshPeriodSeconds));
         }
     }
 }

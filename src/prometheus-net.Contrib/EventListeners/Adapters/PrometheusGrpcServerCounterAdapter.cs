@@ -1,57 +1,17 @@
-﻿using Prometheus.Contrib.Core;
+﻿using Prometheus.Contrib.EventListeners.Counters;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
-    public class PrometheusGrpcServerCounterAdapter : ICounterAdapter
+    internal class PrometheusGrpcServerCounterAdapter : BaseAdapter
     {
-        private static class GrpcServerCountersConstants
-        {
-            public const string GrpcServerTotalCalls = "total-calls";
-            public const string GrpcServerCurrentCalls = "current-calls";
-            public const string GrpcServerCallsFailed = "calls-failed";
-            public const string GrpcServerCallsDeadlineExceeded = "calls-deadline-exceeded";
-            public const string GrpcServerMessagesSent = "messages-sent";
-            public const string GrpcServerMessagesReceived = "messages-received";
-            public const string GrpcServerCallsUnimplemented = "calls-unimplemented";
-        }
+        public const string EventSourceName = "Grpc.AspNetCore.Server";
 
-        private static class GrpcServerPrometheusCounters
-        {
-            public static Gauge GrpcServerTotalCalls = Metrics.CreateGauge("grpc_server_calls_total", "Total Calls");
-            public static Gauge GrpcServerCurrentCalls = Metrics.CreateGauge("grpc_server_calls_current_total", "Current Calls");
-            public static Gauge GrpcServerCallsFailed = Metrics.CreateGauge("grpc_server_calls_failed_total", "Total Calls Failed");
-            public static Gauge GrpcServerCallsDeadlineExceeded = Metrics.CreateGauge("grpc_server_deadline_exceeded_total", "Total Calls Deadline Exceeded");
-            public static Gauge GrpcServerMessagesSent = Metrics.CreateGauge("grpc_server_messages_sent_total", "Total Messages Sent");
-            public static Gauge GrpcServerMessagesReceived = Metrics.CreateGauge("grpc_server_messages_received_total", "Total Messages Received");
-            public static Gauge GrpcServerCallsUnimplemented = Metrics.CreateGauge("grpc_server_calls_unimplemented_total", "Total Calls Unimplemented");
-        }
-
-        public void OnCounterEvent(string name, double value)
-        {
-            switch (name)
-            {
-                case GrpcServerCountersConstants.GrpcServerTotalCalls:
-                    GrpcServerPrometheusCounters.GrpcServerTotalCalls.Set(value);
-                    break;
-                case GrpcServerCountersConstants.GrpcServerCurrentCalls:
-                    GrpcServerPrometheusCounters.GrpcServerCurrentCalls.Set(value);
-                    break;
-                case GrpcServerCountersConstants.GrpcServerCallsFailed:
-                    GrpcServerPrometheusCounters.GrpcServerCallsFailed.Set(value);
-                    break;
-                case GrpcServerCountersConstants.GrpcServerCallsDeadlineExceeded:
-                    GrpcServerPrometheusCounters.GrpcServerCallsDeadlineExceeded.Set(value);
-                    break;
-                case GrpcServerCountersConstants.GrpcServerMessagesSent:
-                    GrpcServerPrometheusCounters.GrpcServerMessagesSent.Set(value);
-                    break;
-                case GrpcServerCountersConstants.GrpcServerMessagesReceived:
-                    GrpcServerPrometheusCounters.GrpcServerMessagesReceived.Set(value);
-                    break;
-                case GrpcServerCountersConstants.GrpcServerCallsUnimplemented:
-                    GrpcServerPrometheusCounters.GrpcServerCallsUnimplemented.Set(value);
-                    break;
-            }
-        }
+        internal readonly MeanCounter TotalCalls = new MeanCounter("total-calls", "grpc_server_calls_total", "Total Calls");
+        internal readonly MeanCounter CurrentCalls = new MeanCounter("current-calls", "grpc_server_calls_current_total", "Current Calls");
+        internal readonly MeanCounter CallsFailed = new MeanCounter("calls-failed", "grpc_server_calls_failed_total", "Total Calls Failed");
+        internal readonly MeanCounter CallsDeadlineExceeded = new MeanCounter("calls-deadline-exceeded", "grpc_server_deadline_exceeded_total", "Total Calls Deadline Exceeded");
+        internal readonly MeanCounter MessagesSent = new MeanCounter("messages-sent", "grpc_server_messages_sent_total", "Total Messages Sent");
+        internal readonly MeanCounter MessagesReceived = new MeanCounter("messages-received", "grpc_server_messages_received_total", "Total Messages Received");
+        internal readonly MeanCounter CallsUnimplemented = new MeanCounter("calls-unimplemented", "grpc_server_calls_unimplemented_total", "Total Calls Unimplemented");
     }
 }
