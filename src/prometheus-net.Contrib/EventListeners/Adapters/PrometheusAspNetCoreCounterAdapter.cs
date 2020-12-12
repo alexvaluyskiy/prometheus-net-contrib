@@ -17,7 +17,7 @@ namespace Prometheus.Contrib.EventListeners.Adapters
 
         public PrometheusAspNetCoreCounterAdapter()
         {
-            _counters = BaseCounter.GenerateDictionary(this);
+            _counters = CounterUtils.GenerateDictionary(this);
         }
 
         public void OnCounterEvent(IDictionary<string, object> eventPayload)

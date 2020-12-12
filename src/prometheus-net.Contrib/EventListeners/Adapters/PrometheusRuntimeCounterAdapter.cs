@@ -42,7 +42,7 @@ namespace Prometheus.Contrib.EventListeners.Adapters
         
         public PrometheusRuntimeCounterAdapter()
         {
-            _counters = BaseCounter.GenerateDictionary(this);
+            _counters = CounterUtils.GenerateDictionary(this);
         }
 
         public void OnCounterEvent(IDictionary<string, object> eventPayload)
