@@ -37,6 +37,7 @@ namespace WebApp
                 return sqlConnection;
             });
 
+            services.AddPrometheusCounters();
             services.AddPrometheusAspNetCoreMetrics();
             services.AddPrometheusEasyCachingMetrics();
 
@@ -88,6 +89,10 @@ namespace WebApp
                 endpoints.MapControllers();
                 endpoints.MapMetrics();
             });
+            
+            using var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            var context = scope.ServiceProvider.GetService<TestContext>();
+            context.Database.Migrate();
         }
     }
 }
