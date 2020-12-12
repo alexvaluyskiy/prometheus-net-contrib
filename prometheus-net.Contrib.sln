@@ -27,6 +27,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.github\workflows\run-tests.yaml = .github\workflows\run-tests.yaml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F671BC85-327B-4D38-B79B-468E6E014F28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prometheus-net.Contrib.Tests", "prometheus-net.Contrib.Tests\prometheus-net.Contrib.Tests.csproj", "{6F8CB8F7-B50E-4523-AAA2-2AE23DD64DFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,10 @@ Global
 		{3A94C4BE-4CAB-43B4-8B9C-C1D9170514A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A94C4BE-4CAB-43B4-8B9C-C1D9170514A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A94C4BE-4CAB-43B4-8B9C-C1D9170514A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F8CB8F7-B50E-4523-AAA2-2AE23DD64DFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F8CB8F7-B50E-4523-AAA2-2AE23DD64DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F8CB8F7-B50E-4523-AAA2-2AE23DD64DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F8CB8F7-B50E-4523-AAA2-2AE23DD64DFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +76,7 @@ Global
 		{A19FEE93-6856-452D-84A1-0A934959D823} = {3706E795-AB7E-4E74-BE2B-32443C7D8479}
 		{4D84BD15-265B-4429-89BE-8A4015040B2F} = {3706E795-AB7E-4E74-BE2B-32443C7D8479}
 		{3A94C4BE-4CAB-43B4-8B9C-C1D9170514A8} = {3706E795-AB7E-4E74-BE2B-32443C7D8479}
+		{6F8CB8F7-B50E-4523-AAA2-2AE23DD64DFA} = {F671BC85-327B-4D38-B79B-468E6E014F28}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A88CA7BA-1BAD-4ADA-A863-C8FC9768A0D0}
