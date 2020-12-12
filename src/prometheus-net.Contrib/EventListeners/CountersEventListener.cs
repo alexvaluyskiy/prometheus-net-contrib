@@ -19,7 +19,8 @@ namespace Prometheus.Contrib.EventListeners
             [PrometheusGrpcClientCounterAdapter.EventSourceName] = new PrometheusGrpcClientCounterAdapter(),
             [PrometheusEfCoreCounterAdapter.EventSourceName] = new PrometheusEfCoreCounterAdapter(),
             [PrometheusKestrelCounterAdapter.EventSourceName] = new PrometheusKestrelCounterAdapter(),
-            [PrometheusHttpClientCounterAdapter.EventSourceName] = new PrometheusHttpClientCounterAdapter()
+            [PrometheusHttpClientCounterAdapter.EventSourceName] = new PrometheusHttpClientCounterAdapter(),
+            [PrometheusNetSecurityCounterAdapter.EventSourceName] = new PrometheusNetSecurityCounterAdapter()
         };
 
         internal CountersEventListener(int refreshPeriodSeconds = 10)
