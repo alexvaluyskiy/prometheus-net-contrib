@@ -8,10 +8,10 @@ namespace Prometheus.Contrib.EventListeners.Adapters
     {
         public const string EventSourceName = "Microsoft.AspNetCore.Hosting";
             
-        public readonly IncrementCounter RequestsPerSecond = new IncrementCounter("requests-per-second", "aspnetcore_requests_per_second", "Request Rate");
-        public readonly MeanCounter TotalRequests = new MeanCounter("total-requests","aspnetcore_requests_total", "Total Requests");
-        public readonly MeanCounter CurrentRequests = new MeanCounter("current-requests", "aspnetcore_requests_current_total", "Current Requests");
-        public readonly MeanCounter FailedRequests = new MeanCounter("failed-requests", "aspnetcore_requests_failed_total", "Failed Requests");
+        internal readonly IncrementCounter RequestsPerSecond = new IncrementCounter("requests-per-second", "aspnetcore_requests_per_second", "Request Rate");
+        internal readonly MeanCounter TotalRequests = new MeanCounter("total-requests","aspnetcore_requests_total", "Total Requests");
+        internal readonly MeanCounter CurrentRequests = new MeanCounter("current-requests", "aspnetcore_requests_current_total", "Current Requests");
+        internal readonly MeanCounter FailedRequests = new MeanCounter("failed-requests", "aspnetcore_requests_failed_total", "Failed Requests");
 
         private readonly Dictionary<string, BaseCounter> _counters;
 

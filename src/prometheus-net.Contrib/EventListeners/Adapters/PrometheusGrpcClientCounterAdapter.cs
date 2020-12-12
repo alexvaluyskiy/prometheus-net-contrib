@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Prometheus.Contrib.Core;
+using Prometheus.Contrib.EventListeners.Counters;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
@@ -7,53 +8,31 @@ namespace Prometheus.Contrib.EventListeners.Adapters
     {
         public const string EventSourceName = "Grpc.Net.Client";
 
-        private static class GrpcClientCountersConstants
-        {
-            public const string GrpcClientTotalCalls = "total-calls";
-            public const string GrpcClientCurrentCalls = "current-calls";
-            public const string GrpcClientCallsFailed = "calls-failed";
-            public const string GrpcClientCallsDeadlineExceeded = "calls-deadline-exceeded";
-            public const string GrpcClientMessagesSent = "messages-sent";
-            public const string GrpcClientMessagesReceived = "messages-received";
-        }
+        internal readonly MeanCounter TotalCalls = new MeanCounter("total-calls", "grpc_client_calls_total", "Total Calls");
+        internal readonly MeanCounter urrentCalls = new MeanCounter("current-calls", "grpc_client_calls_current_total", "Current Calls");
+        internal readonly MeanCounter CallsFailed = new MeanCounter("calls-failed", "grpc_client_calls_failed_total", "Total Calls Failed");
+        internal readonly MeanCounter CallsDeadlineExceeded = new MeanCounter("calls-deadline-exceeded", "grpc_client_calls_deadline_exceeded_total", "Total Calls Deadline Exceeded");
+        internal readonly MeanCounter MessagesSent = new MeanCounter("messages-sent", "grpc_client_messages_sent_total", "Total Messages Sent");
+        internal readonly MeanCounter MessagesReceived = new MeanCounter("messages-received", "grpc_client_messages_received_total", "Total Messages Received");
 
-        private static class GrpcClientPrometheusCounters
-        {
-            public static Gauge GrpcClientTotalCalls = Metrics.CreateGauge("grpc_client_calls_total", "Total Calls");
-            public static Gauge GrpcClientCurrentCalls = Metrics.CreateGauge("grpc_client_calls_current_total", "Current Calls");
-            public static Gauge GrpcClientCallsFailed = Metrics.CreateGauge("grpc_client_calls_failed_total", "Total Calls Failed");
-            public static Gauge GrpcClientCallsDeadlineExceeded = Metrics.CreateGauge("grpc_client_calls_deadline_exceeded_total", "Total Calls Deadline Exceeded");
-            public static Gauge GrpcClientMessagesSent = Metrics.CreateGauge("grpc_client_messages_sent_total", "Total Messages Sent");
-            public static Gauge GrpcClientMessagesReceived = Metrics.CreateGauge("grpc_client_messages_received_total", "Total Messages Received");
-        }
+        private readonly Dictionary<string, BaseCounter> _counters;
 
-        public void OnCounterEvent(string name, double value)
+        public PrometheusGrpcClientCounterAdapter()
         {
-            switch (name)
-            {
-                case GrpcClientCountersConstants.GrpcClientTotalCalls:
-                    GrpcClientPrometheusCounters.GrpcClientTotalCalls.Set(value);
-                    break;
-                case GrpcClientCountersConstants.GrpcClientCurrentCalls:
-                    GrpcClientPrometheusCounters.GrpcClientCurrentCalls.Set(value);
-                    break;
-                case GrpcClientCountersConstants.GrpcClientCallsFailed:
-                    GrpcClientPrometheusCounters.GrpcClientCallsFailed.Set(value);
-                    break;
-                case GrpcClientCountersConstants.GrpcClientCallsDeadlineExceeded:
-                    GrpcClientPrometheusCounters.GrpcClientCallsDeadlineExceeded.Set(value);
-                    break;
-                case GrpcClientCountersConstants.GrpcClientMessagesSent:
-                    GrpcClientPrometheusCounters.GrpcClientMessagesSent.Set(value);
-                    break;
-                case GrpcClientCountersConstants.GrpcClientMessagesReceived:
-                    GrpcClientPrometheusCounters.GrpcClientMessagesReceived.Set(value);
-                    break;
-            }
+            _counters = BaseCounter.GenerateDictionary(this);
         }
 
         public void OnCounterEvent(IDictionary<string, object> eventPayload)
         {
+            if (!eventPayload.TryGetValue("Name", out var counterName))
+            {
+                return;
+            }
+            
+            if (!_counters.TryGetValue((string) counterName, out var counter))
+                return;
+
+            counter.TryReadEventCounterData(eventPayload);
         }
     }
 }
