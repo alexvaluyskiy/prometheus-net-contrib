@@ -44,7 +44,7 @@ namespace Prometheus.Contrib.EventListeners
         
         protected override void OnEventWritten(EventWrittenEventArgs eventData)
         {
-            if (eventData.EventName is null || eventData.EventName.Equals("EventCounters") || eventData.Payload == null)
+            if (eventData.EventName is null || !eventData.EventName.Equals("EventCounters") || eventData.Payload == null)
             {
                 return;
             }

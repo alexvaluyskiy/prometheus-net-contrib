@@ -38,8 +38,8 @@ namespace WebApp
             });
 
             services.AddPrometheusCounters();
-            //services.AddPrometheusAspNetCoreMetrics();
-            //services.AddPrometheusEasyCachingMetrics();
+            services.AddPrometheusAspNetCoreMetrics();
+            services.AddPrometheusEasyCachingMetrics();
 
             AddCachingExtensions(services);
         }
