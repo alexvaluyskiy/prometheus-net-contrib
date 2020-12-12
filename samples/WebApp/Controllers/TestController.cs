@@ -48,6 +48,14 @@ namespace WebApp.Controllers
         public async Task<IActionResult> EfCore()
         {
             await this.testContext.Database.CanConnectAsync();
+            
+            return Ok("It's OK");
+        }
+        
+        [HttpGet("efcore-save-changes")]
+        public async Task<IActionResult> EfCoreSaveChanges()
+        {
+            await this.testContext.SaveChangesAsync();
 
             return Ok("It's OK");
         }

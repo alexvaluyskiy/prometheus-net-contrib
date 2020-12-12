@@ -1,72 +1,42 @@
-﻿using Prometheus.Contrib.Core;
+﻿using System.Collections.Generic;
+using Prometheus.Contrib.Core;
+using Prometheus.Contrib.EventListeners.Counters;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
-    public class PrometheusEfCoreCounterAdapter : ICounterAdapter
+    internal class PrometheusEfCoreCounterAdapter : ICounterAdapter
     {
-        private static class EfCoreCountersConstants
+        public const string EventSourceName = "Microsoft.EntityFrameworkCore";
+        
+        internal readonly MeanCounter ActiveDbContexts = new MeanCounter("active-db-contexts", "efcore_active_dbcontexts_total", "Active DbContexts");
+        internal readonly MeanCounter TotalQueries = new MeanCounter("total-queries", "efcore_queries_total", "Queries (Total)");
+        internal readonly IncrementCounter QueriesPerSecond = new IncrementCounter("queries-per-second", "efcore_queries_per_second", "Queries");
+        internal readonly MeanCounter TotalSaveChanges = new MeanCounter("total-save-changes", "efcore_savechanges_total", "SaveChanges (Total)");
+        internal readonly IncrementCounter SaveChangesPerSecond = new IncrementCounter("save-changes-per-second", "efcore_savechanges_per_second", "SaveChanges");
+        internal readonly MeanCounter CompiledQueryCacheHitRate = new MeanCounter("compiled-query-cache-hit-rate", "efcore_compiled_query_cache_hit_ratio", "Query Cache Hit Rate");
+        internal readonly MeanCounter TotalExecutionStrategyOperationFailures = new MeanCounter("total-execution-strategy-operation-failures", "efcore_execution_strategy_operation_failures_total", "Execution Strategy Operation Failures (Total)");
+        internal readonly IncrementCounter ExecutionStrategyOperationFailuresPerSecond = new IncrementCounter("execution-strategy-operation-failures-per-second", "efcore_execution_strategy_operation_failures_per_second", "Execution Strategy Operation Failures");
+        internal readonly MeanCounter TotalOptimisticConcurrencyFailures = new MeanCounter("total-optimistic-concurrency-failures", "efcore_optimistic_concurrency_failures_total", "Optimistic Concurrency Failures (Total)");
+        internal readonly IncrementCounter OptimisticConcurrencyFailuresPerSecond = new IncrementCounter("optimistic-concurrency-failures-per-second", "efcore_optimistic_concurrency_failures_per_second", "Optimistic Concurrency Failures");
+        
+        private readonly Dictionary<string, BaseCounter> _counters;
+
+        public PrometheusEfCoreCounterAdapter()
         {
-            public const string EfCoreActiveDbContexts = "active-db-contexts";
-            public const string EfCoreTotalQueries = "total-queries";
-            public const string EfCoreQueriesPerSecond = "queries-per-second";
-            public const string EfCoreTotalSaveChanges = "total-save-changes";
-            public const string EfCoreSaveChangesPerSecond = "save-changes-per-second";
-            public const string EfCoreCompiledQueryCacheHitRate = "compiled-query-cache-hit-rate";
-            public const string EfCoreTotalExecutionStrategyOperationFailures = "total-execution-strategy-operation-failures";
-            public const string EfCoreExecutionStrategyOperationFailuresPerSecond = "execution-strategy-operation-failures-per-second";
-            public const string EfCoreTotalOptimisticConcurrencyFailures = "total-optimistic-concurrency-failures";
-            public const string EfCoreOptimisticConcurrencyFailuresPerSecond = "optimistic-concurrency-failures-per-second";
+            _counters = BaseCounter.GenerateDictionary(this);
         }
 
-        private static class EfCorePrometheusCounters
+        public void OnCounterEvent(IDictionary<string, object> eventPayload)
         {
-            public static Gauge EfCoreActiveDbContexts = Metrics.CreateGauge("efcore_active_dbcontexts_total", "Active DbContexts");
-            public static Gauge EfCoreTotalQueries = Metrics.CreateGauge("efcore_queries_total", "Queries (Total)");
-            public static Gauge EfCoreQueriesPerSecond = Metrics.CreateGauge("efcore_queries_per_second", "Queries");
-            public static Gauge EfCoreTotalSaveChanges = Metrics.CreateGauge("efcore_savechanges_total", "SaveChanges (Total)");
-            public static Gauge EfCoreSaveChangesPerSecond = Metrics.CreateGauge("efcore_savechanges_per_second", "SaveChanges");
-            public static Gauge EfCoreCompiledQueryCacheHitRate = Metrics.CreateGauge("efcore_compiled_query_cache_hit_ratio", "Query Cache Hit Rate");
-            public static Gauge EfCoreTotalExecutionStrategyOperationFailures = Metrics.CreateGauge("efcore_execution_strategy_operation_failures_total", "Execution Strategy Operation Failures (Total)");
-            public static Gauge EfCoreExecutionStrategyOperationFailuresPerSecond = Metrics.CreateGauge("efcore_execution_strategy_operation_failures_per_second", "Execution Strategy Operation Failures");
-            public static Gauge EfCoreTotalOptimisticConcurrencyFailures = Metrics.CreateGauge("efcore_optimistic_concurrency_failures_total", "Optimistic Concurrency Failures (Total)");
-            public static Gauge EfCoreOptimisticConcurrencyFailuresPerSecond = Metrics.CreateGauge("efcore_optimistic_concurrency_failures_per_second", "Optimistic Concurrency Failures");
-        }
-
-        public void OnCounterEvent(string name, double value)
-        {
-            switch (name)
+            if (!eventPayload.TryGetValue("Name", out var counterName))
             {
-                case EfCoreCountersConstants.EfCoreActiveDbContexts:
-                    EfCorePrometheusCounters.EfCoreActiveDbContexts.Set(value);
-                    break;
-                case EfCoreCountersConstants.EfCoreTotalQueries:
-                    EfCorePrometheusCounters.EfCoreTotalQueries.Set(value);
-                    break;
-                case EfCoreCountersConstants.EfCoreQueriesPerSecond:
-                    EfCorePrometheusCounters.EfCoreQueriesPerSecond.Set(value);
-                    break;
-                case EfCoreCountersConstants.EfCoreTotalSaveChanges:
-                    EfCorePrometheusCounters.EfCoreTotalSaveChanges.Set(value);
-                    break;
-                case EfCoreCountersConstants.EfCoreSaveChangesPerSecond:
-                    EfCorePrometheusCounters.EfCoreSaveChangesPerSecond.Set(value);
-                    break;
-                case EfCoreCountersConstants.EfCoreCompiledQueryCacheHitRate:
-                    EfCorePrometheusCounters.EfCoreCompiledQueryCacheHitRate.Set(value);
-                    break;
-                case EfCoreCountersConstants.EfCoreTotalExecutionStrategyOperationFailures:
-                    EfCorePrometheusCounters.EfCoreTotalExecutionStrategyOperationFailures.Set(value);
-                    break;
-                case EfCoreCountersConstants.EfCoreExecutionStrategyOperationFailuresPerSecond:
-                    EfCorePrometheusCounters.EfCoreExecutionStrategyOperationFailuresPerSecond.Set(value);
-                    break;
-                case EfCoreCountersConstants.EfCoreTotalOptimisticConcurrencyFailures:
-                    EfCorePrometheusCounters.EfCoreTotalOptimisticConcurrencyFailures.Set(value);
-                    break;
-                case EfCoreCountersConstants.EfCoreOptimisticConcurrencyFailuresPerSecond:
-                    EfCorePrometheusCounters.EfCoreOptimisticConcurrencyFailuresPerSecond.Set(value);
-                    break;
+                return;
             }
+            
+            if (!_counters.TryGetValue((string) counterName, out var counter))
+                return;
+
+            counter.TryReadEventCounterData(eventPayload);
         }
     }
 }

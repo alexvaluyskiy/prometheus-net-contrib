@@ -1,7 +1,9 @@
-﻿namespace Prometheus.Contrib.Core
+﻿using System.Collections.Generic;
+
+namespace Prometheus.Contrib.Core
 {
     public interface ICounterAdapter
     {
-        void OnCounterEvent(string name, double value);
+        void OnCounterEvent(IDictionary<string, object> eventPayload);
     }
 }

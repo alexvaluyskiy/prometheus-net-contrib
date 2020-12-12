@@ -1,9 +1,12 @@
-﻿using Prometheus.Contrib.Core;
+﻿using System.Collections.Generic;
+using Prometheus.Contrib.Core;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
-    public class PrometheusSignalRCounterAdapter : ICounterAdapter
+    internal class PrometheusSignalRCounterAdapter : ICounterAdapter
     {
+        public const string EventSourceName = "Microsoft.AspNetCore.Http.Connections";
+
         private static class SignalrCountersConstants
         {
             public const string SignalrConnectionsStarted = "connections-started";
@@ -42,6 +45,10 @@ namespace Prometheus.Contrib.EventListeners.Adapters
                     SignalrPrometheusCounters.SignalrConnectionsDuration.Set(value);
                     break;
             }
+        }
+
+        public void OnCounterEvent(IDictionary<string, object> eventPayload)
+        {
         }
     }
 }

@@ -1,42 +1,36 @@
-﻿using Prometheus.Contrib.Core;
+﻿using System.Collections.Generic;
+using Prometheus.Contrib.Core;
+using Prometheus.Contrib.EventListeners.Counters;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
-    public class PrometheusAspNetCoreCounterAdapter : ICounterAdapter
+    internal class PrometheusAspNetCoreCounterAdapter : ICounterAdapter
     {
-        private static class AspNetCoreCountersConstants
+        public const string EventSourceName = "Microsoft.AspNetCore.Hosting";
+            
+        public readonly IncrementCounter RequestsPerSecond = new IncrementCounter("requests-per-second", "aspnetcore_requests_per_second", "Request Rate");
+        public readonly MeanCounter TotalRequests = new MeanCounter("total-requests","aspnetcore_requests_total", "Total Requests");
+        public readonly MeanCounter CurrentRequests = new MeanCounter("current-requests", "aspnetcore_requests_current_total", "Current Requests");
+        public readonly MeanCounter FailedRequests = new MeanCounter("failed-requests", "aspnetcore_requests_failed_total", "Failed Requests");
+
+        private readonly Dictionary<string, BaseCounter> _counters;
+
+        public PrometheusAspNetCoreCounterAdapter()
         {
-            public const string AspNetCoreRequestsPerSecond = "requests-per-second";
-            public const string AspNetCoreTotalRequests = "total-requests";
-            public const string AspNetCoreCurrentRequests = "current-requests";
-            public const string AspNetCoreFailedRequests = "failed-requests";
+            _counters = BaseCounter.GenerateDictionary(this);
         }
 
-        private static class AspNetCorePrometheusCounters
+        public void OnCounterEvent(IDictionary<string, object> eventPayload)
         {
-            public static Gauge AspNetCoreRequestsPerSecond = Metrics.CreateGauge("aspnetcore_requests_per_second", "Request Rate");
-            public static Gauge AspNetCoreTotalRequests = Metrics.CreateGauge("aspnetcore_requests_total", "Total Requests");
-            public static Gauge AspNetCoreCurrentRequests = Metrics.CreateGauge("aspnetcore_requests_current_total", "Current Requests");
-            public static Gauge AspNetCoreFailedRequests = Metrics.CreateGauge("aspnetcore_requests_failed_total", "Failed Requests");
-        }
-
-        public void OnCounterEvent(string name, double value)
-        {
-            switch (name)
+            if (!eventPayload.TryGetValue("Name", out var counterName))
             {
-                case AspNetCoreCountersConstants.AspNetCoreRequestsPerSecond:
-                    AspNetCorePrometheusCounters.AspNetCoreRequestsPerSecond.Set(value);
-                    break;
-                case AspNetCoreCountersConstants.AspNetCoreTotalRequests:
-                    AspNetCorePrometheusCounters.AspNetCoreTotalRequests.Set(value);
-                    break;
-                case AspNetCoreCountersConstants.AspNetCoreCurrentRequests:
-                    AspNetCorePrometheusCounters.AspNetCoreCurrentRequests.Set(value);
-                    break;
-                case AspNetCoreCountersConstants.AspNetCoreFailedRequests:
-                    AspNetCorePrometheusCounters.AspNetCoreFailedRequests.Set(value);
-                    break;
+                return;
             }
+            
+            if (!_counters.TryGetValue((string) counterName, out var counter))
+                return;
+
+            counter.TryReadEventCounterData(eventPayload);
         }
     }
 }

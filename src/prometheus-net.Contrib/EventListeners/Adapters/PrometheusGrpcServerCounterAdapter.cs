@@ -1,9 +1,12 @@
-﻿using Prometheus.Contrib.Core;
+﻿using System.Collections.Generic;
+using Prometheus.Contrib.Core;
 
 namespace Prometheus.Contrib.EventListeners.Adapters
 {
-    public class PrometheusGrpcServerCounterAdapter : ICounterAdapter
+    internal class PrometheusGrpcServerCounterAdapter : ICounterAdapter
     {
+        public const string EventSourceName = "Grpc.AspNetCore.Server";
+
         private static class GrpcServerCountersConstants
         {
             public const string GrpcServerTotalCalls = "total-calls";
@@ -52,6 +55,10 @@ namespace Prometheus.Contrib.EventListeners.Adapters
                     GrpcServerPrometheusCounters.GrpcServerCallsUnimplemented.Set(value);
                     break;
             }
+        }
+
+        public void OnCounterEvent(IDictionary<string, object> eventPayload)
+        {
         }
     }
 }
