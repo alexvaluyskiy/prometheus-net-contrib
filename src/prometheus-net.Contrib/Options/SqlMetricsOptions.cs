@@ -6,6 +6,5 @@ namespace Prometheus.Contrib.Options
 {
     public class SqlMetricsOptions
     {
-        public bool CollectStatistics { get; set; } = false;
     }
 }
