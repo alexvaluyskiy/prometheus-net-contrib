@@ -1,10 +1,8 @@
 ﻿using System;
 using Prometheus.Contrib.Core;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using Prometheus.Contrib.Options;
 
@@ -21,7 +19,7 @@ namespace Prometheus.Contrib.Diagnostics
                 "The duration of DB requests processed by an application.",
                 new HistogramConfiguration { Buckets = Histogram.ExponentialBuckets(0.001, 2, 16) });
             public static readonly Counter SqlCommandsErrors = Metrics.CreateCounter(
-                "sqlclient_commands_errors_total", 
+                "sqlclient_commands_errors_total",
                 "Total DB requests errors",
                 new CounterConfiguration { LabelNames = new[] { "type" } });
 
@@ -31,29 +29,7 @@ namespace Prometheus.Contrib.Diagnostics
 
             public static readonly Counter DbTransactionsCommitedCount = Metrics.CreateCounter("sqlclient_transaction_committed_total", "Total committed transactions.");
             public static readonly Counter DbTransactionsRollbackCount = Metrics.CreateCounter("sqlclient_transaction_rollback_total", "Total rollback transactions.");
-
-            public static readonly Gauge SqlBuffersReceived = Metrics.CreateGauge("sqlclient_received_buffers", "Number of buffers received");
-            public static readonly Gauge SqlBuffersSent = Metrics.CreateGauge("sqlclient_sent_buffers", "Number of buffers sent");
-            public static readonly Gauge SqlBytesReceived = Metrics.CreateGauge("sqlclient_received_bytes", "Number of bytes received");
-            public static readonly Gauge SqlBytesSent = Metrics.CreateGauge("sqlclient_sent_bytes", "Number of bytes sent");
-            public static readonly Gauge SqlConnectionTime = Metrics.CreateGauge("sqlclient_connection_time", "Number of bytes sent");
-            public static readonly Gauge SqlCursorOpens = Metrics.CreateGauge("sqlclient_cursor_open", "Number of bytes sent");
-            public static readonly Gauge SqlExecutionTime = Metrics.CreateGauge("sqlclient_execution_time", "Number of bytes sent");
-            public static readonly Gauge SqlIduCount = Metrics.CreateGauge("sqlclient_idu_count", "Number of bytes sent");
-            public static readonly Gauge SqlIduRows = Metrics.CreateGauge("sqlclient_idu_rows", "Number of bytes sent");
-            public static readonly Gauge SqlNetworkServerTime = Metrics.CreateGauge("sqlclient_network_server_time", "Number of bytes sent");
-            public static readonly Gauge SqlPreparedExecs = Metrics.CreateGauge("sqlclient_prepared_exec", "Number of bytes sent");
-            public static readonly Gauge SqlPrepares = Metrics.CreateGauge("sqlclient_prepares", "Number of bytes sent");
-            public static readonly Gauge SqlSelectCount = Metrics.CreateGauge("sqlclient_select_count", "Number of bytes sent");
-            public static readonly Gauge SqlSelectRows = Metrics.CreateGauge("sqlclient_select_rows", "Number of bytes sent");
-            public static readonly Gauge SqlServerRoundtrips = Metrics.CreateGauge("sqlclient_server_roundtrips", "Number of bytes sent");
-            public static readonly Gauge SqlSumResultSets = Metrics.CreateGauge("sqlclient_sum_result_sets", "Number of bytes sent");
-            public static readonly Gauge SqlTransactions = Metrics.CreateGauge("sqlclient_transacions", "Number of bytes sent");
-            public static readonly Gauge SqlUnpreparedExecs = Metrics.CreateGauge("sqlclient_unprepared_exec", "Number of bytes sent");
         }
-
-        private readonly PropertyFetcher<object> connectionFetcher = new PropertyFetcher<object>("ConnectionId");
-        private readonly PropertyFetcher<object> statisticsFetcher = new PropertyFetcher<object>("Statistics");
 
         private ConcurrentDictionary<string, Dictionary<string, long>> Statistics = new ConcurrentDictionary<string, Dictionary<string, long>>();
         private readonly AsyncLocal<long> commandTimestampContext = new AsyncLocal<long>();
@@ -88,18 +64,9 @@ namespace Prometheus.Contrib.Diagnostics
                     break;
                 case "Microsoft.Data.SqlClient.WriteCommandAfter":
                     {
-                        long operationTimeStamp = Stopwatch.GetTimestamp() - commandTimestampContext.Value;
-                        PrometheusCounters.SqlCommandsDuration.Observe(TimeSpan.FromTicks(operationTimeStamp).TotalSeconds);
-
-                        if (options.CollectStatistics)
-                        {
-                            if (statisticsFetcher.Fetch(payload) is IDictionary currentStatistics)
-                            {
-                                var connection = connectionFetcher.Fetch(payload).ToString();
-
-                                WriteStatisticsMetrics(connection, currentStatistics);
-                            }
-                        }
+                        long ticks = Stopwatch.GetTimestamp() - commandTimestampContext.Value;
+                        var timeElapsed = TimeSpan.FromMilliseconds(((double)ticks / Stopwatch.Frequency) * 1000);
+                        PrometheusCounters.SqlCommandsDuration.Observe(timeElapsed.TotalSeconds);
                     }
                     break;
                 case "Microsoft.Data.SqlClient.WriteCommandError":
@@ -192,43 +159,6 @@ namespace Prometheus.Contrib.Diagnostics
                     }
                     break;
             }
-        }
-
-        private void WriteStatisticsMetrics(string connection, IDictionary currentStatistics)
-        {
-            var aggregatedStats = GetAggregatedStatistics(connection, currentStatistics);
-
-            PrometheusCounters.SqlBuffersReceived.Set(aggregatedStats["BuffersReceived"]);
-            PrometheusCounters.SqlBuffersSent.Set(aggregatedStats["BuffersSent"]);
-            PrometheusCounters.SqlBytesReceived.Set(aggregatedStats["BytesReceived"]);
-            PrometheusCounters.SqlBytesSent.Set(aggregatedStats["BytesSent"]);
-            PrometheusCounters.SqlConnectionTime.Set(aggregatedStats["ConnectionTime"]);
-            PrometheusCounters.SqlCursorOpens.Set(aggregatedStats["CursorOpens"]);
-            PrometheusCounters.SqlExecutionTime.Set(aggregatedStats["ExecutionTime"]);
-            PrometheusCounters.SqlIduCount.Set(aggregatedStats["IduCount"]);
-            PrometheusCounters.SqlIduRows.Set(aggregatedStats["IduRows"]);
-            PrometheusCounters.SqlNetworkServerTime.Set(aggregatedStats["NetworkServerTime"]);
-            PrometheusCounters.SqlPreparedExecs.Set(aggregatedStats["PreparedExecs"]);
-            PrometheusCounters.SqlPrepares.Set(aggregatedStats["Prepares"]);
-            PrometheusCounters.SqlSelectCount.Set(aggregatedStats["SelectCount"]);
-            PrometheusCounters.SqlSelectRows.Set(aggregatedStats["SelectRows"]);
-            PrometheusCounters.SqlServerRoundtrips.Set(aggregatedStats["ServerRoundtrips"]);
-            PrometheusCounters.SqlSumResultSets.Set(aggregatedStats["SumResultSets"]);
-            PrometheusCounters.SqlTransactions.Set(aggregatedStats["Transactions"]);
-            PrometheusCounters.SqlUnpreparedExecs.Set(aggregatedStats["UnpreparedExecs"]);
-        }
-
-        private Dictionary<string, long> GetAggregatedStatistics(string connectionId, IDictionary currentStatistics)
-        {
-            var genericDictionary = new Dictionary<string, long>();
-            foreach (var key in currentStatistics.Keys)
-                genericDictionary.Add(key.ToString(), (long)currentStatistics[key]);
-
-            Statistics[connectionId] = genericDictionary;
-
-            return Statistics.SelectMany(x => x.Value)
-                .GroupBy(x => x.Key, v => v.Value, (k, g) => new { Key = k, Val = g.Sum(x => x) })
-                .ToDictionary(x => x.Key, v => v.Val);
         }
     }
 }
