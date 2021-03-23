@@ -16,7 +16,7 @@ namespace Prometheus.Contrib.Diagnostics
         {
             public static readonly Histogram SqlCommandsDuration = Metrics.CreateHistogram(
                 "sqlclient_commands_duration_seconds",
-                "The duration of DB requests processed by an application.",
+                "The duration of DB requests processed by an application",
                 new HistogramConfiguration { Buckets = Histogram.ExponentialBuckets(0.001, 2, 16) });
             public static readonly Counter SqlCommandsErrors = Metrics.CreateCounter(
                 "sqlclient_commands_errors_total",
@@ -30,8 +30,8 @@ namespace Prometheus.Contrib.Diagnostics
                 "Total DB connections errors",
                 new CounterConfiguration { LabelNames = new[] { "code" } });
 
-            public static readonly Counter DbTransactionsCommitedCount = Metrics.CreateCounter("sqlclient_transactions_committed_total", "Total committed transactions.");
-            public static readonly Counter DbTransactionsRollbackCount = Metrics.CreateCounter("sqlclient_transactions_rollback_total", "Total rollback transactions.");
+            public static readonly Counter DbTransactionsCommitedCount = Metrics.CreateCounter("sqlclient_transactions_committed_total", "Total committed transactions");
+            public static readonly Counter DbTransactionsRollbackCount = Metrics.CreateCounter("sqlclient_transactions_rollback_total", "Total rollback transactions");
             public static readonly Counter DbTransactionsErrors = Metrics.CreateCounter(
                 "sqlclient_transactions_errors_total",
                 "Total DB transaction errors",
