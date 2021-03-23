@@ -22,13 +22,14 @@ namespace Prometheus.Contrib.EventListeners
             [PrometheusHttpClientCounterAdapter.EventSourceName] = new PrometheusHttpClientCounterAdapter(),
             [PrometheusNetSecurityCounterAdapter.EventSourceName] = new PrometheusNetSecurityCounterAdapter(),
             [PrometheusNetNameResolutionCounterAdapter.EventSourceName] = new PrometheusNetNameResolutionCounterAdapter(),
-            [PrometheusNetSocketsCounterAdapter.EventSourceName] = new PrometheusNetSocketsCounterAdapter()
+            [PrometheusNetSocketsCounterAdapter.EventSourceName] = new PrometheusNetSocketsCounterAdapter(),
+            [PrometheusSqlClientCounterAdapter.EventSourceName] = new PrometheusSqlClientCounterAdapter()
         };
 
         internal CountersEventListener(int refreshPeriodSeconds = 10)
         {
             this.refreshPeriodSeconds = refreshPeriodSeconds;
-            
+
             EventSourceCreated += OnEventSourceCreated;
         }
 
@@ -38,7 +39,7 @@ namespace Prometheus.Contrib.EventListeners
             {
                 return;
             }
-            
+
             var args = new Dictionary<string, string>
             {
                 ["EventCounterIntervalSec"] = refreshPeriodSeconds.ToString()
@@ -46,14 +47,14 @@ namespace Prometheus.Contrib.EventListeners
 
             EnableEvents(e.EventSource, EventLevel.Verbose, EventKeywords.All, args);
         }
-        
+
         protected override void OnEventWritten(EventWrittenEventArgs eventData)
         {
             if (eventData.EventName is null || !eventData.EventName.Equals("EventCounters") || eventData.Payload == null)
             {
                 return;
             }
-            
+
             if (!counterAdapters.ContainsKey(eventData.EventSource.Name))
             {
                 return;
