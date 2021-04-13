@@ -1,5 +1,4 @@
 using System;
-using Prometheus;
 using Prometheus.Contrib.Core;
 using Prometheus.Contrib.Diagnostics;
 using Prometheus.Contrib.EventListeners;
