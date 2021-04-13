@@ -6,11 +6,17 @@ namespace Prometheus.Contrib.Diagnostics
 {
     public class HttpClientListenerHandler : DiagnosticListenerHandler
     {
-        private readonly PrometheusCounters counters;
-
-        public class PrometheusCounters
+        private readonly IPrometheusCounters counters;
+        
+        public interface IPrometheusCounters
         {
-            public readonly Histogram HttpClientRequestsDuration = Metrics.CreateHistogram(
+            ICollector<IHistogram> HttpClientRequestsDuration { get; }
+            ICounter HttpClientRequestsErrors { get; }
+        }
+
+        public sealed class PrometheusCounters : IPrometheusCounters
+        {
+            public ICollector<IHistogram> HttpClientRequestsDuration { get; } = Metrics.CreateHistogram(
                 "http_client_requests_duration_seconds",
                 "Time between first byte of request headers sent to last byte of response received.",
                 new HistogramConfiguration
@@ -19,7 +25,7 @@ namespace Prometheus.Contrib.Diagnostics
                     Buckets = Histogram.ExponentialBuckets(0.001, 2, 16)
                 });
 
-            public readonly Counter HttpClientRequestsErrors = Metrics.CreateCounter(
+            public ICounter HttpClientRequestsErrors { get; } = Metrics.CreateCounter(
                 "http_client_requests_errors_total",
                 "Total HTTP requests sent errors.");
         }
@@ -27,7 +33,7 @@ namespace Prometheus.Contrib.Diagnostics
         private readonly PropertyFetcher<object> stopResponseFetcher = new PropertyFetcher<object>("Response");
         private readonly PropertyFetcher<object> stopRequestFetcher = new PropertyFetcher<object>("Request");
 
-        public HttpClientListenerHandler(string sourceName, PrometheusCounters counters) : base(sourceName)
+        public HttpClientListenerHandler(string sourceName, IPrometheusCounters counters) : base(sourceName)
         {
             this.counters = counters;
         }

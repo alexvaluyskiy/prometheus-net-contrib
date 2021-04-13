@@ -1,4 +1,5 @@
 using System;
+using Prometheus;
 using Prometheus.Contrib.Core;
 using Prometheus.Contrib.Diagnostics;
 using Prometheus.Contrib.EventListeners;
@@ -18,7 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton(aspNetCoreListenerHandler);
         }
 
-        public static void AddPrometheusHttpClientMetrics(this IServiceCollection services, HttpClientListenerHandler.PrometheusCounters counters)
+        public static void AddPrometheusHttpClientMetrics(this IServiceCollection services, HttpClientListenerHandler.IPrometheusCounters counters)
         {
             counters ??= new HttpClientListenerHandler.PrometheusCounters();
             
