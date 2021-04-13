@@ -12,7 +12,7 @@ namespace prometheus_net.Contrib.Tests
     public class HttpClientListenerHandlerTests
     {
         [Fact]
-        public async Task When_HttpClient_request_is_cancelled_should_increase_metric()
+        public async Task When_HttpClient_request_is_canceled_should_increase_metric()
         {
             var apiStub = new ApiStub();
             apiStub.Get("/", (request, args) =>
