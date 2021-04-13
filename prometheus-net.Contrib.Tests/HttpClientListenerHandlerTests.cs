@@ -34,7 +34,7 @@ namespace prometheus_net.Contrib.Tests
 
             var cancellationTokenSource = new CancellationTokenSource(1);
 
-            Assert.ThrowsAsync<TaskCanceledException>(async () =>
+            await Assert.ThrowsAsync<TaskCanceledException>(async () =>
                 await client.GetAsync("/", cancellationTokenSource.Token));
 
             Assert.Equal(1,
