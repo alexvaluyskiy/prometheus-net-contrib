@@ -11,7 +11,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="prometheus-net" Version="4.1.1" />
+    <PackageReference Include="prometheus-net" Version="3.4.0" />
     <PackageReference Include="prometheus-net.AspNetCore" Version="3.4.0" />
 
     <PackageReference Include="EasyCaching.Redis" Version="0.9.0" />
