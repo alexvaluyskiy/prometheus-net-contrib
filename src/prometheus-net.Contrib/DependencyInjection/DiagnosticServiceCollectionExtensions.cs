@@ -18,10 +18,12 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton(aspNetCoreListenerHandler);
         }
 
-        public static void AddPrometheusHttpClientMetrics(this IServiceCollection services)
+        public static void AddPrometheusHttpClientMetrics(this IServiceCollection services, HttpClientListenerHandler.IPrometheusCounters counters)
         {
+            counters ??= new HttpClientListenerHandler.PrometheusCounters();
+            
             var httpClientListenerHandler = new DiagnosticSourceSubscriber(
-                name => new HttpClientListenerHandler(name),
+                name => new HttpClientListenerHandler(name, counters),
                 listener => listener.Name.Equals("HttpHandlerDiagnosticListener"));
             httpClientListenerHandler.Subscribe();
 
