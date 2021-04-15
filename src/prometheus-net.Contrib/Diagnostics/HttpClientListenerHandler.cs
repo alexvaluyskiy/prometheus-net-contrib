@@ -23,6 +23,8 @@ namespace Prometheus.Contrib.Diagnostics
         }
 
         private readonly PropertyFetcher<object> stopResponseFetcher = new PropertyFetcher<object>("Response");
+        
+        private readonly PropertyFetcher<object> stopRequestFetcher = new PropertyFetcher<object>("Request");
 
         public HttpClientListenerHandler(string sourceName) : base(sourceName)
         {
@@ -33,8 +35,19 @@ namespace Prometheus.Contrib.Diagnostics
             var response = stopResponseFetcher.Fetch(payload);
 
             if (response is HttpResponseMessage httpResponse)
+            {
                 PrometheusCounters.HttpClientRequestsDuration
                     .WithLabels(httpResponse.StatusCode.ToString("D"), httpResponse.RequestMessage.RequestUri.Host)
+                    .Observe(activity.Duration.TotalSeconds);
+                
+                return;
+            }
+
+            var request = stopRequestFetcher.Fetch(payload);
+
+            if (request is HttpRequestMessage httpRequest)
+                PrometheusCounters.HttpClientRequestsDuration
+                    .WithLabels("0", httpRequest.RequestUri.Host)
                     .Observe(activity.Duration.TotalSeconds);
         }
 
