@@ -22,30 +22,22 @@ namespace Prometheus.Contrib.Diagnostics
                 "Total HTTP requests sent errors.");
         }
 
-        private readonly PropertyFetcher<object> stopResponseFetcher = new PropertyFetcher<object>("Response");
+        private readonly PropertyFetcher<HttpResponseMessage> stopResponseFetcher = new PropertyFetcher<HttpResponseMessage>("Response");
         
-        private readonly PropertyFetcher<object> stopRequestFetcher = new PropertyFetcher<object>("Request");
+        private readonly PropertyFetcher<HttpRequestMessage> stopRequestFetcher = new PropertyFetcher<HttpRequestMessage>("Request");
 
         public HttpClientListenerHandler(string sourceName) : base(sourceName)
         {
         }
 
         public override void OnStopActivity(Activity activity, object payload)
-        {
-            var response = stopResponseFetcher.Fetch(payload);
-
-            if (response is HttpResponseMessage httpResponse)
-            {
+        { 
+            if(stopResponseFetcher.TryFetch(payload, out HttpResponseMessage httpResponse) && httpResponse != null)
                 PrometheusCounters.HttpClientRequestsDuration
                     .WithLabels(httpResponse.StatusCode.ToString("D"), httpResponse.RequestMessage.RequestUri.Host)
                     .Observe(activity.Duration.TotalSeconds);
-                
-                return;
-            }
-
-            var request = stopRequestFetcher.Fetch(payload);
-
-            if (request is HttpRequestMessage httpRequest)
+            
+            else if(stopRequestFetcher.TryFetch(payload, out HttpRequestMessage httpRequest) && httpRequest != null)
                 PrometheusCounters.HttpClientRequestsDuration
                     .WithLabels("0", httpRequest.RequestUri.Host)
                     .Observe(activity.Duration.TotalSeconds);
