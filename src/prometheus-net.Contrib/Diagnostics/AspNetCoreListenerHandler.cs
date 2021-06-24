@@ -22,6 +22,19 @@ namespace Prometheus.Contrib.Diagnostics
             public static readonly Counter AspNetCoreRequestsErrors = Metrics.CreateCounter(
                 "aspnetcore_requests_errors_total",
                 "Total HTTP requests received errors.");
+
+            public static readonly Counter AspNetCoreRequestsTotal = Metrics.CreateCounter(
+                "aspnetcore_requests_total",
+                "Total Requests.",
+                new CounterConfiguration
+                {
+                    LabelNames = new[] { "code", "method", "route" }
+                });
+
+            public static readonly Gauge AspNetCoreRequestsCurrentTotal = Metrics.CreateGauge(
+                "aspnetcore_requests_current_total",
+                "Current Requests.",
+                labelNames: new[] { "method", "route" });
         }
 
         public AspNetCoreListenerHandler(string sourceName) : base(sourceName)
