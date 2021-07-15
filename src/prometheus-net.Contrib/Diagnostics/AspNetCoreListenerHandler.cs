@@ -41,6 +41,18 @@ namespace Prometheus.Contrib.Diagnostics
         {
         }
 
+        public override void OnStartActivity(Activity activity, object payload)
+        {
+            if (payload is HttpContext httpContext)
+            {
+                var endpointFeature = httpContext.Features[typeof(IEndpointFeature)] as IEndpointFeature;
+                string route = endpointFeature?.Endpoint is RouteEndpoint endpoint ? endpoint.RoutePattern.RawText : string.Empty;
+
+                PrometheusCounters.AspNetCoreRequestsCurrentTotal
+                   .WithLabels(httpContext.Request.Method, route).Inc();
+            }
+        }
+
         public override void OnStopActivity(Activity activity, object payload)
         {
             if (payload is HttpContext httpContext)
@@ -51,6 +63,9 @@ namespace Prometheus.Contrib.Diagnostics
                 PrometheusCounters.AspNetCoreRequestsDuration
                    .WithLabels(httpContext.Response.StatusCode.ToString(), httpContext.Request.Method, route)
                    .Observe(activity.Duration.TotalSeconds);
+
+                PrometheusCounters.AspNetCoreRequestsCurrentTotal
+                   .WithLabels(httpContext.Request.Method, route).Dec();
             }
         }
 
