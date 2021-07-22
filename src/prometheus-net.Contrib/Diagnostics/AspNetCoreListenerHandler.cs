@@ -31,10 +31,16 @@ namespace Prometheus.Contrib.Diagnostics
                     LabelNames = new[] { "code", "method", "route" }
                 });
 
-            public static readonly Gauge AspNetCoreRequestsCurrentTotal = Metrics.CreateGauge(
-                "aspnetcore_requests_current_total",
+            public static readonly Gauge AspNetCoreRequestsInProgress = Metrics.CreateGauge(
+                "aspnetcore_requests_in_progress",
                 "Current Requests.",
                 labelNames: new[] { "method", "route" });
+        }
+
+        private string Route(HttpContext httpContext)
+        {
+            var endpointFeature = httpContext.Features[typeof(IEndpointFeature)] as IEndpointFeature;
+            return endpointFeature?.Endpoint is RouteEndpoint endpoint ? endpoint.RoutePattern.RawText : string.Empty;
         }
 
         public AspNetCoreListenerHandler(string sourceName) : base(sourceName)
@@ -45,11 +51,8 @@ namespace Prometheus.Contrib.Diagnostics
         {
             if (payload is HttpContext httpContext)
             {
-                var endpointFeature = httpContext.Features[typeof(IEndpointFeature)] as IEndpointFeature;
-                string route = endpointFeature?.Endpoint is RouteEndpoint endpoint ? endpoint.RoutePattern.RawText : string.Empty;
-
-                PrometheusCounters.AspNetCoreRequestsCurrentTotal
-                   .WithLabels(httpContext.Request.Method, route).Inc();
+                PrometheusCounters.AspNetCoreRequestsInProgress
+                   .WithLabels(httpContext.Request.Method, Route(httpContext)).Inc();
             }
         }
 
@@ -57,14 +60,13 @@ namespace Prometheus.Contrib.Diagnostics
         {
             if (payload is HttpContext httpContext)
             {
-                var endpointFeature = httpContext.Features[typeof(IEndpointFeature)] as IEndpointFeature;
-                string route = endpointFeature?.Endpoint is RouteEndpoint endpoint ? endpoint.RoutePattern.RawText : string.Empty;
+                var route = Route(httpContext);
 
                 PrometheusCounters.AspNetCoreRequestsDuration
                    .WithLabels(httpContext.Response.StatusCode.ToString(), httpContext.Request.Method, route)
                    .Observe(activity.Duration.TotalSeconds);
 
-                PrometheusCounters.AspNetCoreRequestsCurrentTotal
+                PrometheusCounters.AspNetCoreRequestsInProgress
                    .WithLabels(httpContext.Request.Method, route).Dec();
             }
         }
@@ -72,6 +74,14 @@ namespace Prometheus.Contrib.Diagnostics
         public override void OnException(Activity activity, object payload)
         {
             PrometheusCounters.AspNetCoreRequestsErrors.Inc();
+
+            if (payload is HttpContext httpContext)
+            {
+                var route = Route(httpContext);
+
+                PrometheusCounters.AspNetCoreRequestsInProgress
+                   .WithLabels(httpContext.Request.Method, route).Dec();
+            }
         }
     }
 }
