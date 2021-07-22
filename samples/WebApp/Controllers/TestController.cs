@@ -24,7 +24,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet("http-in")]
-        public async Task<IActionResult> HttpIn() => Ok("It's OK");
+        public IActionResult HttpIn() => Ok("It's OK");
 
         [HttpGet("http-out")]
         public async Task<IActionResult> HttpOut()
