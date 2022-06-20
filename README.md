@@ -170,7 +170,7 @@ public class Startup
 
 | Name                                      | Type    | Description                                                                                                           |
 |-------------------------------------------|---------|-----------------------------------------------------------------------------------------------------------------------|
-| idsrv_api_authentication_failure_total    | Counter | Gets raised for successful API authentication at the introspection endpoint                                           |
+| idsrv_api_authentication_success_total    | Counter | Gets raised for successful API authentication at the introspection endpoint                                           |
 | idsrv_api_authentication_failure_total    | Counter | Gets raised for failed API authentication at the introspection endpoint                                               |
 | idsrv_client_authentication_success_total | Counter | Gets raised for successful client authentication at the token endpoint                                                |
 | idsrv_client_authentication_failure_total | Counter | Gets raised for failed client authentication at the token endpoint                                                    |
@@ -186,7 +186,7 @@ public class Startup
 | idsrv_consent_denied_total                | Counter | Gets raised in the consent UI                                                                                         |
 | idsrv_unhandled_exceptions_total          | Counter | Gets raised for unhandled exceptions                                                                                  |
 | idsrv_device_authorization_success_total  | Counter | Gets raised for successful device authorization requests                                                              |
-| idsrv_device_authorization_success_total  | Counter | Gets raised for failed device authorization requests                                                                  |
+| idsrv_device_authorization_failure_total  | Counter | Gets raised for failed device authorization requests                                                                  |
 
 ## Prometheus healthchecks
 It is possible to publish all healthchecks results to a prometheus

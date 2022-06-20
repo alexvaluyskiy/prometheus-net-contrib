@@ -79,7 +79,7 @@ namespace Prometheus.IdentityServer.Sinks
             "Gets raised for successful device authorization requests.");
 
         private static readonly Counter DeviceAuthorizationFailureCount = Metrics.CreateCounter(
-            "idsrv_device_authorization_success_total",
+            "idsrv_device_authorization_failure_total",
             "Gets raised for failed device authorization requests.");
 
         public Task PersistAsync(Event evt)
